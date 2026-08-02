@@ -195,7 +195,11 @@
       background: var(--gold-l); border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: center;
       font-size: 64px; color: var(--gold);
+      overflow: hidden; 
     }
+      .about-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      }
     .about-text p { font-size: 16px; color: var(--ink2); margin-bottom: 1rem; line-height: 1.8; }
     .about-tags   { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; }
     .tag {
@@ -388,7 +392,9 @@
 <section id="about" class="section section-alt">
   <div class="container">
     <div class="about-grid">
-      <div class="about-img" aria-hidden="true">🙂</div><!-- ← EDIT: replace emoji with <img> tag if you have a photo -->
+     <div class="about-img">
+    <img src="photo1.jpg" alt="Nachiket Bihare"/>
+    </div>
       <div class="about-text">
         <div class="section-label">About me</div>
         <h2 class="section-title">A bit about who I am</h2>
