@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<!--
+  DeutschTrainer C1 — Portfolio Demo
+  ====================================
+  Fully functional demo with pre-built C1 exercises.
+  No API key or backend required — works directly on GitHub Pages.
+
+  Full version: AI generates unique exercises every session and evaluates open answers automatically.
+-->
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="DeutschTrainer C1 – Interaktiver Grammatik- und Vokabeltrainer für C1-Niveau"/>
+  <title>DeutschTrainer C1 · Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #1a1a2e;  --ink2:   #3d3d5c;  --ink3:   #7a7a9a;
+      --cream:  #f8f6f1;  --white:  #ffffff;
+      --gold:   #c9a84c;  --gold-l: #f5ecd4;
+      --green:  #2d7a4f;  --green-l:#e8f5ee;
+      --red:    #c0392b;  --red-l:  #fdf0ee;
+      --blue:   #1a5276;  --blue-l: #eaf0f8;
+      --orange: #b7560a;  --org-l:  #fef3e8;
+      --border: #e2ddd6;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--cream); color: var(--ink);
+      min-height: 100vh; line-height: 1.6;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--white); border-bottom: 1px solid var(--border);
+      padding: .75rem 1.25rem; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 20;
+    }
+    .brand { font-family: 'Lora', serif; font-size: 18px; font-weight: 600; color: var(--ink); }
+    .brand .gold { color: var(--gold); }
+    .brand .c1  { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 400; color: var(--ink3); margin-left: 3px; }
+    .demo-chip {
+      padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+      letter-spacing: .05em; text-transform: uppercase;
+      background: var(--gold-l); color: #8a6318; border: 1px solid #dfc98a;
+    }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .topbar-info  { font-size: 12px; color: var(--ink3); }
+
+    /* ── Shell ── */
+    .shell { max-width: 700px; margin: 0 auto; padding: 1.5rem 1.1rem 5rem; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white); border-radius: 10px;
+      border: 1px solid var(--border); padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(26,26,46,.07); margin-bottom: .875rem;
+    }
+
+    /* ── Buttons ── */
+    button { font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 11px 22px; border-radius: 8px; font-size: 15px; font-weight: 600;
+      border: none; gap: 6px;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-gold { background: var(--gold); color: var(--white); }
+    .btn-gold:hover { background: #b8963e; }
+    .btn-gold:disabled { background: var(--border); color: var(--ink3); cursor: not-allowed; transform: none; }
+    .btn-outline { background: var(--white); color: var(--ink); border: 1.5px solid var(--border); }
+    .btn-outline:hover { border-color: var(--ink2); }
+    .btn-outline:disabled { opacity: .4; cursor: not-allowed; }
+    .btn-sm   { padding: 7px 16px; font-size: 14px; border-radius: 7px; }
+    .btn-full { width: 100%; margin-top: 1rem; }
+    .btn-menu {
+      padding: 6px 13px; border-radius: 7px; border: 1px solid var(--border);
+      background: var(--white); font-size: 13px; color: var(--ink2); font-weight: 500;
+    }
+    .btn-menu:hover { border-color: var(--ink3); }
+
+    /* ── Form ── */
+    .field-label {
+      display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--ink3); margin-bottom: .4rem;
+    }
+    select, input[type="text"], textarea {
+      width: 100%; padding: 10px 13px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: var(--white);
+      font-size: 15px; color: var(--ink); font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color .15s;
+    }
+    select:focus, input[type="text"]:focus, textarea:focus { border-color: var(--gold); }
+    textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
+
+    /* ── Mode grid ── */
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: .875rem 0 1.25rem; }
+    .mode-btn {
+      padding: 1rem; border-radius: 10px; border: 2px solid var(--border);
+      background: var(--white); text-align: left; width: 100%;
+    }
+    .mode-btn:hover  { border-color: var(--gold); background: var(--gold-l); }
+    .mode-btn.active { border-color: var(--gold); background: var(--gold-l); }
+    .mode-icon { font-size: 20px; display: block; margin-bottom: 5px; }
+    .mode-name { display: block; font-size: 14px; font-weight: 700; color: var(--ink); }
+    .mode-desc { display: block; font-size: 12px; color: var(--ink3); margin-top: 2px; }
+
+    /* ── Progress ── */
+    .prog-wrap { margin-bottom: 1rem; }
+    .prog-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink3); margin-bottom: 6px; }
+    .prog-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .prog-fill  { height: 100%; background: var(--gold); border-radius: 2px; transition: width .4s; }
+
+    /* ── Dots ── */
+    .dot-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .dot {
+      width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border);
+      background: var(--white); color: var(--ink3); font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .dot:hover  { border-color: var(--gold); }
+    .dot.current  { border-color: var(--gold);   background: var(--gold);    color: var(--white);  }
+    .dot.ok       { border-color: var(--green);  background: var(--green-l); color: var(--green);  }
+    .dot.wrong    { border-color: var(--red);    background: var(--red-l);   color: var(--red);    }
+    .dot.partial  { border-color: var(--orange); background: var(--org-l);   color: var(--orange); }
+
+    /* ── Question ── */
+    .type-tag {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      background: var(--blue-l); color: var(--blue); margin-bottom: .875rem;
+    }
+    .q-instr   { font-size: 13px; color: var(--ink3); font-style: italic; margin-bottom: .875rem; }
+    .q-sentence { font-family: 'Lora', serif; font-size: 18px; line-height: 1.8; margin-bottom: 1rem; }
+    .q-blank    { display: inline-block; min-width: 90px; border-bottom: 2px solid var(--ink); margin: 0 3px; vertical-align: baseline; }
+    .ctx-box {
+      background: var(--cream); border-left: 3px solid var(--gold);
+      padding: 10px 14px; border-radius: 0 8px 8px 0;
+      margin-bottom: .875rem; font-size: 15px; line-height: 1.7;
+    }
+    .ctx-box.err { border-left-color: var(--red); }
+    .ctx-label  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; display: block; margin-bottom: 4px; color: var(--ink3); }
+    .ctx-box.err .ctx-label { color: var(--red); }
+
+    /* ── MC ── */
+    .opts { display: flex; flex-direction: column; gap: 6px; margin-bottom: .5rem; }
+    .opt {
+      width: 100%; text-align: left; padding: 11px 14px; border-radius: 8px;
+      border: 1.5px solid var(--border); background: var(--white);
+      font-size: 15px; color: var(--ink); font-family: 'Inter', sans-serif;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .opt:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-l); }
+    .opt.selected  { border-color: var(--gold);   background: var(--gold-l);  color: var(--ink);   }
+    .opt.correct   { border-color: var(--green);  background: var(--green-l); color: var(--green); cursor: default; }
+    .opt.incorrect { border-color: var(--red);    background: var(--red-l);   color: var(--red);   cursor: default; }
+    .opt:disabled  { cursor: default; }
+    .opt-ltr {
+      width: 24px; height: 24px; border-radius: 50%; background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── Feedback ── */
+    .fb {
+      padding: 14px 16px; border-radius: 8px; font-size: 14px;
+      line-height: 1.65; margin-top: 1.25rem; animation: fadeUp .25s ease;
+    }
+    .fb-ok      { background: var(--green-l); border: 1px solid #a8d5bc; color: var(--green); }
+    .fb-no      { background: var(--red-l);   border: 1px solid #f0b8b2; color: var(--red);   }
+    .fb-partial { background: var(--org-l);   border: 1px solid #f5c6a0; color: var(--orange); }
+    .fb-open    { background: var(--blue-l);  border: 1px solid #b8cfe0; color: var(--blue);  }
+    .fb-title   { font-weight: 700; font-size: 15px; margin-bottom: 7px; }
+    .fb-row     { margin-top: 6px; }
+    .fb-row strong { color: var(--ink); }
+    .fb-explain { margin-top: 8px; font-size: 13px; font-style: italic; color: var(--ink3); padding-top: 8px; border-top: 1px solid rgba(0,0,0,.07); }
+    .self-row   { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; font-size: 13px; }
+
+    /* ── Q nav ── */
+    .q-nav { display: flex; justify-content: space-between; align-items: center; margin-top: .875rem; }
+    .q-counter { font-size: 13px; color: var(--ink3); font-weight: 500; }
+
+    /* ── Results ── */
+    .score-wrap { text-align: center; padding: 1.75rem; }
+    .score-ring {
+      width: 88px; height: 88px; border-radius: 50%;
+      border: 5px solid var(--gold); background: var(--gold-l);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .score-num  { font-size: 26px; font-weight: 700; line-height: 1; }
+    .score-den  { font-size: 11px; color: var(--ink3); }
+    .score-pct  { font-size: 14px; color: var(--ink3); }
+    .score-lbl  { font-family: 'Lora', serif; font-size: 20px; margin-top: 4px; }
+    .section-ttl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--ink3); margin-bottom: .875rem; }
+    .rq { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+    .rq-head {
+      padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;
+      background: var(--cream); cursor: pointer; font-size: 14px; user-select: none;
+    }
+    .rq-head:hover { background: #f2efe9; }
+    .rq-body { padding: 12px 14px; border-top: 1px solid var(--border); font-size: 14px; line-height: 1.65; display: none; }
+    .rq-body.open { display: block; }
+    .sb { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .sb-ok      { background: var(--green-l); color: var(--green);  }
+    .sb-no      { background: var(--red-l);   color: var(--red);    }
+    .sb-partial { background: var(--org-l);   color: var(--orange); }
+    .sb-open    { background: var(--blue-l);  color: var(--blue);   }
+    .cta-row    { display: flex; gap: 10px; margin-top: 1.25rem; flex-wrap: wrap; }
+    .cta-row .btn { flex: 1; margin-top: 0; }
+
+    /* ── Full version banner ── */
+    .promo {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d3561 100%);
+      border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.25rem;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .promo-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+    .promo-title { font-family: 'Lora', serif; font-size: 15px; color: #fff; margin-bottom: 4px; }
+    .promo-text  { font-size: 13px; color: rgba(255,255,255,.7); line-height: 1.55; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; } }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .mode-grid { gap: 8px; }
+      .q-sentence { font-size: 16px; }
+      .topbar-info { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── TOP BAR ───────────────────────────────────────────────────── -->
+<div class="topbar">
+  <div class="brand">Deutsch<span class="gold">Trainer</span><span class="c1">C1</span></div>
+  <div class="topbar-right">
+    <span class="topbar-info" id="top-info"></span>
+    <button class="btn-menu" id="menu-btn" style="display:none" onclick="DT.goToMenu()">← Hauptmenü</button>
+    <span class="demo-chip">Demo</span>
+  </div>
+</div>
+
+<!-- ── APP ───────────────────────────────────────────────────────── -->
+<div class="shell" id="app"></div>
+
+<!-- ── SCRIPT ────────────────────────────────────────────────────── -->
+<script>
+'use strict';
+
+// ─── HARDCODED EXERCISES ─────────────────────────────────────────────────────
+const SETS = {
+  Grammatik: {
+    'Konjunktiv II': [
+      {
+        id: 1, typ: 'lueckentext',
+        anweisung: 'Ergänzen Sie die Lücke mit der korrekten Konjunktiv-II-Form.',
+        satz: 'Wenn ich mehr Zeit ___ , würde ich jeden Tag Deutsch üben.',
+        antwort: 'hätte',
+        erklaerung: 'Im Konditionalsatz mit „wenn" steht das Verb im Konjunktiv II. „haben" → „hätte" — nicht „hatte" (das wäre Präteritum Indikativ).',
+      },
+      {
+        id: 2, typ: 'multiple_choice',
+        anweisung: 'Wählen Sie die grammatikalisch korrekte Form.',
+        frage: 'Er tat so, als ___ er die Antwort nicht.',
+        optionen: ['A) weiß', 'B) wusste', 'C) wüsste', 'D) würde wissen'],
+        antwort: 'C',
+        erklaerung: 'Nach „als" (irrealer Vergleich) steht der Konjunktiv II. „wissen" → „wüsste". Bei unregelmäßigen Verben bevorzugt man die einfache KII-Form gegenüber „würde + Infinitiv".',
+      },
+      {
+        id: 3, typ: 'uebersetzung',
+        anweisung: 'Übersetzen Sie den englischen Satz ins Deutsche.',
+        satz: 'If I were you, I would accept the job offer.',
+        antwort: 'Wenn ich an deiner Stelle wäre, würde ich das Jobangebot annehmen.',
+        erklaerung: '„If I were you" → „Wenn ich an deiner Stelle wäre" (oder „Wenn ich du wäre"). Konjunktiv II von „sein" = „wäre". Häufiger Fehler: „Wenn ich du bin/war".',
+      },
+      {
+        id: 4, typ: 'umformung',
+        anweisung: 'Formen Sie den Satz in einen irrealen Bedingungssatz um.',
+        ausgangssatz: 'Er hat kein Auto. Deshalb kann er nicht ans Meer fahren.',
+        aufgabe: 'Beginnen Sie mit: „Wenn er ein Auto hätte, …"',
+        antwort: 'Wenn er ein Auto hätte, könnte er ans Meer fahren.',
+        erklaerung: 'Irrealer Konditionalsatz: „hätte" im Nebensatz, „würde + Infinitiv" oder KII-Form des Modalverbs im Hauptsatz. „können" → „könnte".',
+      },
+      {
+        id: 5, typ: 'fehlerkorrektur',
+        anweisung: 'Finden und korrigieren Sie den grammatischen Fehler.',
+        satz: 'Wenn ich gestern früher aufgestanden wäre, hätte ich den Zug nicht verpasst geworden.',
+        antwort: 'Wenn ich gestern früher aufgestanden wäre, hätte ich den Zug nicht verpasst.',
+        erklaerung: '„verpasst geworden" ist falsch. „verpassen" bildet das Perfekt mit „haben" → „hätte verpasst". Eine Passivkonstruktion mit „werden" ist hier nicht korrekt.',
+      },
+    ],
+  },
+  Vokabular: {
+    'Wirtschaft und Finanzen': [
+      {
+        id: 1, typ: 'multiple_choice',
+        anweisung: 'Wählen Sie den passenden Fachbegriff.',
+        frage: 'Ein Unternehmen, das seine Schulden nicht mehr begleichen kann, muss ___ anmelden.',
+        optionen: ['A) Dividende', 'B) Insolvenz', 'C) Börsengang', 'D) Subvention'],
+        antwort: 'B',
+        erklaerung: '„Insolvenz" bezeichnet die Zahlungsunfähigkeit. „Dividende" = Gewinnausschüttung, „Börsengang" = erstmalige Notierung an der Börse, „Subvention" = staatliche Förderung.',
+      },
+      {
+        id: 2, typ: 'lueckentext',
+        anweisung: 'Ergänzen Sie den passenden Begriff.',
+        satz: 'Die Europäische Zentralbank, kurz ___ , ist für die Geldpolitik in der Eurozone zuständig.',
+        antwort: 'EZB',
+        erklaerung: 'EZB = Europäische Zentralbank. Sie legt den Leitzins fest und steuert so die Inflation und die Geldmenge im Euroraum.',
+      },
+      {
+        id: 3, typ: 'fehlerkorrektur',
+        anweisung: 'Finden und korrigieren Sie den grammatischen Fehler.',
+        satz: 'Trotz der Rezession ist der Aktienkurs um 15 Prozent gestiegen geworden.',
+        antwort: 'Trotz der Rezession ist der Aktienkurs um 15 Prozent gestiegen.',
+        erklaerung: '„steigen" ist intransitiv und bildet das Perfekt mit „sein": „ist gestiegen". „gestiegen geworden" ist eine fehlerhafte Mischung aus Perfekt und Passiv.',
+      },
+      {
+        id: 4, typ: 'uebersetzung',
+        anweisung: 'Übersetzen Sie den Satz ins Deutsche.',
+        satz: 'The central bank raised interest rates to combat rising inflation.',
+        antwort: 'Die Zentralbank erhöhte die Zinsen, um die steigende Inflation zu bekämpfen.',
+        erklaerung: '„to combat" = „bekämpfen" (Infinitivkonstruktion: „um … zu"). „interest rates" = „Zinsen/Leitzinsen". „raised" = „erhöhte" (Präteritum).',
+      },
+      {
+        id: 5, typ: 'umformung',
+        anweisung: 'Verbinden Sie die beiden Sätze mit dem angegebenen Ausdruck.',
+        ausgangssatz: 'Das Unternehmen hat hohe Schulden. Es kann nicht in neue Technologien investieren.',
+        aufgabe: 'Nutzen Sie: „aufgrund"',
+        antwort: 'Aufgrund seiner hohen Schulden kann das Unternehmen nicht in neue Technologien investieren.',
+        erklaerung: '„aufgrund" regiert den Genitiv: „aufgrund seiner Schulden" — nicht „aufgrund von seinen Schulden" (das wäre Dativ).',
+      },
+    ],
+  },
+};
+
+const TYPE_LABELS = {
+  lueckentext:'Lückentext', multiple_choice:'Multiple Choice',
+  umformung:'Satzumformung', uebersetzung:'Übersetzung', fehlerkorrektur:'Fehlerkorrektur',
+};
+const OPEN_TYPES = ['umformung','uebersetzung','fehlerkorrektur'];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+const S = {
+  screen:    'setup',
+  modus:     null,
+  thema:     '',
+  aufgaben:  [],
+  antworten: {},
+  submitted: {},
+  results:   {},
+  currentQ:  0,
+};
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function total()   { return S.aufgaben.length; }
+function answered(){ return Object.keys(S.submitted).length; }
+
+function dotCls(q, i) {
+  if (i === S.currentQ) return 'current';
+  if (!S.submitted[q.id]) return '';
+  const r = S.results[q.id];
+  if (r?.korrekt)   return 'ok';
+  if (r?.teilweise) return 'partial';
+  if (r?.selfNo)    return 'wrong';
+  if (r?.selfYes)   return 'ok';
+  return 'wrong';
+}
+
+// ─── SCREEN CONTROL ──────────────────────────────────────────────────────────
+function render() {
+  const app = document.getElementById('app');
+  const menuBtn = document.getElementById('menu-btn');
+  const topInfo = document.getElementById('top-info');
+
+  menuBtn.style.display = S.screen !== 'setup' ? '' : 'none';
+  topInfo.textContent = S.screen === 'quiz' ? `${S.modus} · ${S.thema}` : '';
+
+  if      (S.screen === 'setup')   app.innerHTML = buildSetup();
+  else if (S.screen === 'quiz')    app.innerHTML = buildQuizFull();
+  else if (S.screen === 'results') app.innerHTML = buildResults();
+}
+
+// ─── BUILD SETUP ─────────────────────────────────────────────────────────────
+function buildSetup() {
+  const topics = S.modus ? Object.keys(SETS[S.modus]) : [];
+  const canStart = !!(S.modus && S.thema);
+
+  return `
+    <div style="text-align:center;padding:2rem 0 1.5rem">
+      <h1 style="font-family:'Lora',serif;font-size:26px;font-weight:600;margin-bottom:6px">Tagesübung C1</h1>
+      <p style="font-size:14px;color:var(--ink3);max-width:400px;margin:0 auto">
+        Interaktive Grammatik- und Vokabelübungen auf C1-Niveau.<br>
+        5 Aufgaben · sofortiges Feedback · ca. 10 Minuten.
+      </p>
+    </div>
+
+    <div class="card">
+      <span class="field-label">Bereich</span>
+      <div class="mode-grid">
+        <button class="mode-btn ${S.modus==='Grammatik'?'active':''}" onclick="DT.setModus('Grammatik')">
+          <span class="mode-icon">✦</span>
+          <span class="mode-name">Grammatik</span>
+          <span class="mode-desc">Strukturen &amp; Formen</span>
+        </button>
+        <button class="mode-btn ${S.modus==='Vokabular'?'active':''}" onclick="DT.setModus('Vokabular')">
+          <span class="mode-icon">◈</span>
+          <span class="mode-name">Vokabular</span>
+          <span class="mode-desc">Wörter &amp; Phrasen</span>
+        </button>
+      </div>
+
+      ${S.modus ? `
+        <span class="field-label">Thema</span>
+        <select onchange="DT.setThema(this.value)">
+          <option value="">— Thema auswählen —</option>
+          ${topics.map(t=>`<option value="${esc(t)}" ${S.thema===t?'selected':''}>${esc(t)}</option>`).join('')}
+        </select>` : ''}
+
+      <button class="btn btn-gold btn-full" onclick="DT.startSession()" ${canStart?'':'disabled'}>
+        Übung starten →
+      </button>
+    </div>
+
+    <div style="text-align:center;font-size:12px;color:var(--ink3);margin-top:.75rem">
+      Demo-Version · 2 Themen verfügbar
+    </div>`;
+}
+
+// ─── BUILD FULL QUIZ SCREEN ───────────────────────────────────────────────────
+function buildQuizFull() {
+  const tot = total(), ans = answered();
+  const pct = tot > 0 ? Math.round((ans/tot)*100) : 0;
+  const done = ans === tot;
+
+  return `
+    <div class="prog-wrap">
+      <div class="prog-meta">
+        <span>Frage ${S.currentQ+1} von ${tot}</span>
+        <span>${ans} von ${tot} beantwortet</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+    </div>
+
+    <div class="dot-nav">
+      ${S.aufgaben.map((q,i)=>`
+        <button class="dot ${dotCls(q,i)}" onclick="DT.goQ(${i})">${i+1}</button>
+      `).join('')}
+    </div>
+
+    <div class="card">
+      ${buildCard(S.aufgaben[S.currentQ])}
+    </div>
+
+    <div class="q-nav">
+      <button class="btn btn-outline btn-sm" onclick="DT.goQ(${S.currentQ-1})" ${S.currentQ===0?'disabled':''}>← Zurück</button>
+      <span class="q-counter">${S.currentQ+1} / ${tot}</span>
+      <button class="btn btn-outline btn-sm" onclick="DT.goQ(${S.currentQ+1})" ${S.currentQ===tot-1?'disabled':''}>Weiter →</button>
+    </div>
+
+    ${done ? `
+      <button class="btn btn-gold btn-full" onclick="DT.goToResults()" style="margin-top:1.5rem">
+        Ergebnisse ansehen →
+      </button>` : ''}`;
+}
+
+// ─── BUILD QUESTION CARD ──────────────────────────────────────────────────────
+function buildCard(a) {
+  if (!a) return '';
+  const sub    = !!S.submitted[a.id];
+  const res    = S.results[a.id] || {};
+  const val    = String(S.antworten[a.id] || '');
+  const isOpen = OPEN_TYPES.includes(a.typ);
+
+  let html = `
+    <div class="type-tag">${TYPE_LABELS[a.typ]||a.typ}</div>
+    <div class="q-instr">${esc(a.anweisung)}</div>`;
+
+  // ── Lückentext ──────────────────────────────────────────────────────────────
+  if (a.typ === 'lueckentext') {
+    const [p1, p2=''] = (a.satz||'').split('___');
+    html += `
+      <div class="q-sentence">${esc(p1)}<span class="q-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>${esc(p2)}</div>
+      <input type="text" value="${esc(val)}" placeholder="Ihre Antwort…"
+        oninput="DT.saveInput(this.value)" ${sub?'disabled':''} style="font-size:16px"/>`;
+  }
+
+  // ── Multiple Choice ─────────────────────────────────────────────────────────
+  else if (a.typ === 'multiple_choice') {
+    html += `<div class="q-sentence" style="font-size:17px">${esc(a.frage)}</div><div class="opts">`;
+    (a.optionen||[]).forEach((opt, j) => {
+      const L = ['A','B','C','D'][j];
+      let cls = '';
+      if (sub) { cls = L===a.antwort ? 'correct' : L===val ? 'incorrect' : ''; }
+      else      { cls = val===L ? 'selected' : ''; }
+      html += `<button class="opt ${cls}" onclick="${sub?'':'DT.pickMC(\''+L+'\')'}" ${sub?'disabled':''}>
+        <span class="opt-ltr">${L}</span>${esc(opt.replace(/^[A-D]\)\s*/,''))}
+      </button>`;
+    });
+    html += `</div>`;
+  }
+
+  // ── Übersetzung ─────────────────────────────────────────────────────────────
+  else if (a.typ === 'uebersetzung') {
+    html += `
+      <div class="ctx-box">
+        <span class="ctx-label">🇬🇧 Englisch</span>
+        <em>${esc(a.satz)}</em>
+      </div>
+      <textarea oninput="DT.saveInput(this.value)" ${sub?'disabled':''}
+        placeholder="Deutsche Übersetzung…" rows="3"
+        style="${sub?'opacity:.7':''}">${esc(val)}</textarea>`;
+  }
+
+  // ── Umformung ───────────────────────────────────────────────────────────────
+  else if (a.typ === 'umformung') {
+    html += `
+      <div class="ctx-box">
+        <span class="ctx-label">Ausgangssatz</span>${esc(a.ausgangssatz)}
+      </div>
+      <div style="font-size:13px;color:var(--ink3);margin-bottom:.6rem;font-weight:600">${esc(a.aufgabe)}</div>
+      <textarea oninput="DT.saveInput(this.value)" ${sub?'disabled':''}
+        placeholder="Umgeformten Satz eingeben…" rows="3"
+        style="${sub?'opacity:.7':''}">${esc(val)}</textarea>`;
+  }
+
+  // ── Fehlerkorrektur ─────────────────────────────────────────────────────────
+  else if (a.typ === 'fehlerkorrektur') {
+    html += `
+      <div class="ctx-box err">
+        <span class="ctx-label">⚠ Fehlerhafter Satz</span>${esc(a.satz)}
+      </div>
+      <textarea oninput="DT.saveInput(this.value)" ${sub?'disabled':''}
+        placeholder="Korrigierten Satz eingeben…" rows="3"
+        style="${sub?'opacity:.7':''}">${esc(val)}</textarea>`;
+  }
+
+  // ── Prüfen button ────────────────────────────────────────────────────────────
+  if (!sub) {
+    const hasVal = val.trim().length > 0;
+    html += `<button class="btn btn-gold btn-sm" style="margin-top:1rem"
+      onclick="DT.submitQ()" ${hasVal?'':'disabled'}>Prüfen →</button>`;
+  }
+
+  // ── Feedback ──────────────────────────────────────────────────────────────────
+  if (sub && isOpen) {
+    // Show model answer + self-assessment buttons
+    const selfDone = res.selfYes !== undefined || res.selfNo !== undefined;
+    html += `<div class="fb fb-open">
+      <div class="fb-title">📖 Musterlösung</div>
+      <div class="fb-row"><strong>Korrekte Antwort:</strong> ${esc(a.antwort)}</div>
+      ${a.erklaerung ? `<div class="fb-explain">💡 ${esc(a.erklaerung)}</div>` : ''}
+      ${!selfDone ? `
+        <div class="self-row">
+          War Ihre Antwort richtig?
+          <button class="btn btn-sm btn-outline" style="border-color:var(--green);color:var(--green)"
+            onclick="DT.selfAssess(true)">✓ Ja</button>
+          <button class="btn btn-sm btn-outline" style="border-color:var(--red);color:var(--red)"
+            onclick="DT.selfAssess(false)">✗ Nein</button>
+        </div>` : `
+        <div style="margin-top:8px;font-size:13px">
+          Selbstbewertung: <strong style="color:${res.selfYes?'var(--green)':'var(--red)'}">${res.selfYes?'✓ Richtig':'✗ Falsch'}</strong>
+        </div>`}
+    </div>`;
+  }
+
+  if (sub && !isOpen) {
+    const ok = res.korrekt;
+    html += `<div class="fb ${ok?'fb-ok':'fb-no'}">
+      <div class="fb-title">${ok?'✓ Richtig!':'✗ Leider falsch'}</div>
+      ${!ok ? `<div class="fb-row"><strong>Richtige Antwort:</strong> ${esc(a.antwort)}</div>` : ''}
+      ${a.erklaerung ? `<div class="fb-explain">💡 ${esc(a.erklaerung)}</div>` : ''}
+    </div>`;
+  }
+
+  return html;
+}
+
+// ─── BUILD RESULTS ────────────────────────────────────────────────────────────
+function buildResults() {
+  const tot = total();
+  let correct = 0, partial = 0;
+
+  S.aufgaben.forEach(a => {
+    const r = S.results[a.id] || {};
+    const isOpen = OPEN_TYPES.includes(a.typ);
+    if (isOpen) {
+      if (r.selfYes) correct++;
+    } else {
+      if (r.korrekt) correct++;
+    }
+  });
+
+  const pct = Math.round((correct/tot)*100);
+  const lbl = pct>=90?'Ausgezeichnet!':pct>=70?'Sehr gut!':pct>=50?'Gut gemacht!':'Weiter üben!';
+
+  let html = `
+    <div class="card" style="margin-top:1rem">
+      <div class="score-wrap">
+        <div class="score-ring">
+          <span class="score-num">${correct}</span>
+          <span class="score-den">/ ${tot}</span>
+        </div>
+        <div class="score-pct">${pct}% korrekt</div>
+        <div class="score-lbl">${lbl}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-ttl">Alle Aufgaben im Überblick</div>`;
+
+  S.aufgaben.forEach((a, i) => {
+    const r = S.results[a.id] || {};
+    const isOpen = OPEN_TYPES.includes(a.typ);
+    let sbCls, sbTxt;
+    if (isOpen) {
+      if (r.selfYes)       { sbCls='sb-ok';   sbTxt='✓ Richtig'; }
+      else if (r.selfNo)   { sbCls='sb-no';   sbTxt='✗ Falsch';  }
+      else                 { sbCls='sb-open';  sbTxt='Offen';     }
+    } else {
+      sbCls = r.korrekt ? 'sb-ok' : 'sb-no';
+      sbTxt = r.korrekt ? '✓ Richtig' : '✗ Falsch';
+    }
+    const ctx = a.frage||a.satz||a.ausgangssatz||'';
+
+    html += `
+      <div class="rq">
+        <div class="rq-head" onclick="this.nextElementSibling.classList.toggle('open')">
+          <span><strong>${i+1}.</strong> <span style="color:var(--ink3);font-size:13px">${TYPE_LABELS[a.typ]}</span></span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="sb ${sbCls}">${sbTxt}</span>
+            <span style="font-size:12px;color:var(--ink3)">▼</span>
+          </div>
+        </div>
+        <div class="rq-body">
+          ${ctx?`<div style="color:var(--ink3);font-style:italic;margin-bottom:6px">${esc(ctx.slice(0,130)+(ctx.length>130?'…':''))}</div>`:''}
+          <div><strong>Ihre Antwort:</strong> ${esc(S.antworten[a.id]||'(keine)')}</div>
+          <div style="margin-top:4px"><strong>Musterlösung:</strong> ${esc(a.antwort)}</div>
+          ${a.erklaerung?`<div style="margin-top:6px;font-size:13px;color:var(--ink3);font-style:italic">💡 ${esc(a.erklaerung)}</div>`:''}
+        </div>
+      </div>`;
+  });
+
+  html += `</div>
+
+    <div class="cta-row">
+      <button class="btn btn-gold" onclick="DT.startSession()">Thema wiederholen</button>
+      <button class="btn btn-outline" onclick="DT.goToMenu()">Neues Thema</button>
+    </div>
+
+    <div class="promo">
+      <div class="promo-icon">✦</div>
+      <div>
+        <div class="promo-title">Vollversion: Unbegrenzte KI-Übungen</div>
+        <div class="promo-text">
+          Die Vollversion generiert bei jeder Sitzung neue, einzigartige Aufgaben mithilfe von Claude AI
+          und bewertet Ihre offenen Antworten automatisch — inklusive Akzeptanz mehrerer korrekter Varianten
+          (z.B. Präteritum und Perfekt für Vergangenheit).
+        </div>
+      </div>
+    </div>`;
+
+  return html;
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────────────────────
+const DT = {
+  setModus(m) {
+    S.modus = m; S.thema = '';
+    render();
+  },
+  setThema(t) {
+    S.thema = t;
+    // Enable start button live without full re-render
+    const btn = document.querySelector('.btn-gold.btn-full');
+    if (btn) btn.disabled = !t;
+  },
+  startSession() {
+    if (!S.modus || !S.thema) return;
+    S.aufgaben  = SETS[S.modus][S.thema] || [];
+    S.antworten = {}; S.submitted = {}; S.results = {}; S.currentQ = 0;
+    S.screen = 'quiz';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+  goQ(idx) {
+    if (idx < 0 || idx >= total()) return;
+    S.currentQ = idx;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+  saveInput(val) {
+    const a = S.aufgaben[S.currentQ];
+    if (!a || S.submitted[a.id]) return;
+    S.antworten[a.id] = val;
+    const btn = document.querySelector('#app .btn-gold.btn-sm');
+    if (btn) btn.disabled = !val.trim();
+  },
+  pickMC(L) {
+    const a = S.aufgaben[S.currentQ];
+    if (!a || S.submitted[a.id]) return;
+    S.antworten[a.id] = L;
+    // Update visual state without full re-render
+    document.querySelectorAll('.opt').forEach((el, j) => {
+      const letter = ['A','B','C','D'][j];
+      el.className = 'opt' + (letter===L?' selected':'');
+      if (!S.submitted[a.id]) el.onclick = () => DT.pickMC(letter);
+    });
+    const btn = document.querySelector('#app .btn-gold.btn-sm');
+    if (btn) btn.disabled = false;
+  },
+  submitQ() {
+    const a = S.aufgaben[S.currentQ];
+    if (!a || S.submitted[a.id]) return;
+    const val    = String(S.antworten[a.id]||'').trim();
+    const isOpen = OPEN_TYPES.includes(a.typ);
+
+    S.submitted[a.id] = true;
+
+    if (!isOpen) {
+      let korrekt = false;
+      if (a.typ==='multiple_choice') korrekt = val.toUpperCase()===(a.antwort||'').trim().toUpperCase();
+      if (a.typ==='lueckentext')     korrekt = val.toLowerCase()===(a.antwort||'').trim().toLowerCase();
+      S.results[a.id] = { korrekt, teilweise:false };
+    } else {
+      S.results[a.id] = { korrekt:false, teilweise:false };
+    }
+    render();
+  },
+  selfAssess(yes) {
+    const a = S.aufgaben[S.currentQ];
+    if (!a) return;
+    if (yes) { S.results[a.id].selfYes = true; delete S.results[a.id].selfNo; }
+    else     { S.results[a.id].selfNo  = true; delete S.results[a.id].selfYes; }
+    render();
+  },
+  goToResults() {
+    S.screen = 'results';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+  goToMenu() {
+    S.screen = 'setup';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+};
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
