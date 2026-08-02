@@ -37,14 +37,25 @@
       --border: #e2ddd6;
       --nav-h:  64px;
     }
-
+    :root {
+    --ink:    #1a1a2e;
+    --cream:  #f8f6f1;
+    }
+    body.dark {
+    --ink:    #e8e6f0;
+    --ink2:   #b8b4d0;
+    --ink3:   #7a7a9a;
+    --cream:  #0f0f1a;
+    --white:  #1a1a2e;
+    --border: #2d2d45;
+      }
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--cream);
       color: var(--ink);
       line-height: 1.7;
+      transition: background 0.3s ease, color 0.3s ease;
     }
-
     /* ── Utility ─────────────────────────────────────────── */
     .container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
     .section    { padding: 96px 0; }
@@ -322,6 +333,9 @@
     <button class="hamburger" id="hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
+    <button id="theme-btn" onclick="toggleTheme()" style="background:none; border:1px solid var(--border); border-radius:50%; width:36px; height:36px; font-size:16px; cursor:pointer;">
+  🌙
+</button>
   </div>
 </nav>
 
@@ -593,6 +607,29 @@
 
 <!-- ══ SCRIPT ═════════════════════════════════════════════════════════════ -->
 <script>
+  function toggleTheme() {
+  // add or remove the 'dark' class on body
+  document.body.classList.toggle('dark');
+
+  // save the user's choice so it persists on refresh
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+  // update the button emoji
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+}
+  const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  document.body.classList.add('dark');
+  document.getElementById('theme-btn').textContent = '☀️';
+}
+  if (!savedTheme) {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (prefersDark) {
+    document.body.classList.add('dark');
+    document.getElementById('theme-btn').textContent = '☀️';
+  }
+}
 // ── Mobile menu ──────────────────────────────────────────────────────────────
 const hamburger   = document.getElementById('hamburger');
 const mobileMenu  = document.getElementById('mobile-menu');
