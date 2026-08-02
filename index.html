@@ -92,9 +92,6 @@
       border: 1.5px solid var(--border);
     }
     .btn-outline:hover { border-color: var(--ink); }
-    body.dark .nav-links .btn-gold {
-    color: #ffffff;
-    }
 
     /* ── NAV ─────────────────────────────────────────────── */
     .nav {
@@ -325,6 +322,10 @@
     @media (max-width: 480px) {
       .proj-grid { grid-template-columns: 1fr; }
       .hero-cta  { flex-direction: column; }
+    }
+      /* ──Restore dark mode button color for nav links─────────────────────────────────────────── */ 
+    body.dark .nav-links .btn-gold {
+    color: #ffffff;
     }
   </style>
 </head>
