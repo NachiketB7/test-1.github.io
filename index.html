@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<!--
+  Portfolio — index.html
+  ========================
+  Drop this file into your GitHub repo root.
+  It replaces README.md as your homepage automatically.
+
+  HOW TO CUSTOMISE:
+  Search for "← EDIT" comments to find everything you need to change:
+  your name, title, bio, jobs, case studies, contact email, etc.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Portfolio"/> <!-- ← EDIT: your description -->
+  <title>Portfolio</title>                        <!-- ← EDIT: Your Name -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Reset ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ── Tokens ─────────────────────────────────────────── */
+    :root {
+      --ink:    #1a1a2e;
+      --ink2:   #3d3d5c;
+      --ink3:   #7a7a9a;
+      --cream:  #f8f6f1;
+      --white:  #ffffff;
+      --gold:   #c9a84c;
+      --gold-l: #f5ecd4;
+      --green:  #2d7a4f;
+      --blue:   #1a5276;
+      --blue-l: #eaf0f8;
+      --border: #e2ddd6;
+      --nav-h:  64px;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    /* ── Utility ─────────────────────────────────────────── */
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+    .section    { padding: 96px 0; }
+    .section-alt { background: var(--white); }
+    .serif      { font-family: 'Lora', Georgia, serif; }
+
+    .section-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .12em; color: var(--gold); margin-bottom: .6rem;
+    }
+    .section-title {
+      font-family: 'Lora', serif; font-size: clamp(26px, 4vw, 38px);
+      font-weight: 600; color: var(--ink); line-height: 1.25; margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: 16px; color: var(--ink3); max-width: 560px; line-height: 1.7;
+    }
+    .section-head { margin-bottom: 3rem; }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 11px 24px; border-radius: 8px;
+      font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif;
+      text-decoration: none; cursor: pointer; border: none; transition: all .18s;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-gold   { background: var(--gold); color: var(--white); }
+    .btn-gold:hover { background: #b8963e; }
+    .btn-outline {
+      background: transparent; color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--ink); }
+
+    /* ── NAV ─────────────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--nav-h);
+      background: rgba(248, 246, 241, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: 'Lora', serif; font-size: 18px; font-weight: 600;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-brand span { color: var(--gold); }
+    .nav-links {
+      display: flex; align-items: center; gap: 2px; list-style: none;
+    }
+    .nav-links a {
+      display: block; padding: 6px 14px; border-radius: 7px;
+      font-size: 14px; font-weight: 500; color: var(--ink2);
+      text-decoration: none; transition: all .15s;
+    }
+    .nav-links a:hover         { color: var(--ink); background: var(--gold-l); }
+    .nav-links a.active        { color: var(--ink); font-weight: 600; }
+    .nav-links .btn-gold       { padding: 7px 18px; font-size: 14px; margin-left: 8px; }
+
+    /* Mobile nav */
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--ink); border-radius: 2px; transition: all .25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: var(--cream); border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem 1.5rem; z-index: 99;
+      flex-direction: column; gap: 4px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      padding: 10px 14px; border-radius: 8px; font-size: 15px; font-weight: 500;
+      color: var(--ink2); text-decoration: none; transition: all .15s;
+    }
+    .mobile-menu a:hover { background: var(--gold-l); color: var(--ink); }
+    .mobile-menu .btn-gold { margin-top: .5rem; justify-content: center; }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    #home {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding-top: var(--nav-h);
+    }
+    .hero-label {
+      font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-family: 'Lora', serif;
+      font-size: clamp(38px, 7vw, 68px);
+      font-weight: 600; color: var(--ink); line-height: 1.1;
+      margin-bottom: 1.25rem; letter-spacing: -.5px;
+    }
+    .hero-title em { color: var(--gold); font-style: normal; }
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px); color: var(--ink3);
+      max-width: 520px; line-height: 1.7; margin-bottom: 2rem;
+    }
+    .hero-cta  { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-scroll {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      font-size: 12px; color: var(--ink3); letter-spacing: .05em;
+      text-align: center; animation: bounce 2s infinite;
+    }
+    .hero-scroll::after { content: '↓'; display: block; font-size: 18px; margin-top: 4px; }
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+    /* ── ABOUT ───────────────────────────────────────────── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .about-img {
+      aspect-ratio: 4/5; border-radius: 12px;
+      background: var(--gold-l); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px; color: var(--gold);
+    }
+    .about-text p { font-size: 16px; color: var(--ink2); margin-bottom: 1rem; line-height: 1.8; }
+    .about-tags   { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.5rem; }
+    .tag {
+      padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;
+      background: var(--gold-l); color: #8a6318;
+    }
+
+    /* ── EXPERIENCE / PAST WORK ──────────────────────────── */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: grid; grid-template-columns: 160px 1fr;
+      gap: 0 2rem; padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-date { font-size: 13px; color: var(--ink3); font-weight: 500; padding-top: 4px; }
+    .timeline-role { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+    .timeline-co   { font-size: 14px; color: var(--gold); font-weight: 500; margin-bottom: .75rem; }
+    .timeline-desc { font-size: 15px; color: var(--ink2); line-height: 1.7; }
+
+    /* ── CASE STUDIES ────────────────────────────────────── */
+    .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .cs-card {
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border); background: var(--white);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .cs-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,26,46,.1); }
+    .cs-img {
+      height: 200px; background: var(--gold-l);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; border-bottom: 1px solid var(--border);
+    }
+    .cs-body  { padding: 1.25rem; }
+    .cs-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gold); margin-bottom: .4rem; }
+    .cs-title { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: .5rem; }
+    .cs-desc  { font-size: 14px; color: var(--ink3); line-height: 1.65; margin-bottom: 1rem; }
+    .cs-link  { font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; }
+    .cs-link:hover { text-decoration: underline; }
+
+    /* ── PROJECTS ─────────────────────────────────────────── */
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+    .proj-card {
+      border: 1px solid var(--border); border-radius: 12px;
+      background: var(--white); padding: 1.5rem;
+      display: flex; flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .proj-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,26,46,.09); }
+    .proj-icon  { font-size: 28px; margin-bottom: .75rem; }
+    .proj-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--ink3); margin-bottom: .35rem; }
+    .proj-title { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+    .proj-desc  { font-size: 14px; color: var(--ink3); line-height: 1.65; flex: 1; margin-bottom: 1.25rem; }
+    .proj-tags  { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+    .proj-tag   {
+      padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      background: var(--blue-l); color: var(--blue);
+    }
+    .proj-tag.gold { background: var(--gold-l); color: #8a6318; }
+    .proj-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 9px 18px; border-radius: 8px;
+      background: var(--gold); color: var(--white);
+      font-size: 14px; font-weight: 600; text-decoration: none;
+      align-self: flex-start; transition: background .15s;
+    }
+    .proj-link:hover { background: #b8963e; }
+    .proj-link.outline {
+      background: transparent; color: var(--ink);
+      border: 1.5px solid var(--border);
+    }
+    .proj-link.outline:hover { border-color: var(--ink); background: transparent; }
+
+    /* ── CONTACT ─────────────────────────────────────────── */
+    #contact { background: var(--ink); }
+    #contact .section-label { color: var(--gold); }
+    #contact .section-title { color: var(--white); }
+    #contact .section-sub   { color: rgba(255,255,255,.6); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .contact-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 1rem; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.1);
+      text-decoration: none; color: var(--white);
+      transition: background .15s; margin-bottom: .75rem;
+    }
+    .contact-link:hover { background: rgba(255,255,255,.06); }
+    .contact-link-icon { font-size: 20px; width: 40px; text-align: center; flex-shrink: 0; }
+    .contact-link-label { font-size: 12px; color: rgba(255,255,255,.5); margin-bottom: 2px; }
+    .contact-link-val   { font-size: 15px; font-weight: 500; }
+    .contact-note {
+      font-size: 14px; color: rgba(255,255,255,.5); line-height: 1.7; margin-top: 1.5rem;
+    }
+    .availability {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 20px;
+      background: rgba(45,122,79,.25); border: 1px solid rgba(45,122,79,.4);
+      font-size: 13px; font-weight: 500; color: #7ddba3; margin-bottom: 1.5rem;
+    }
+    .avail-dot { width: 8px; height: 8px; border-radius: 50%; background: #7ddba3; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      background: #12121f; color: rgba(255,255,255,.35);
+      text-align: center; padding: 1.5rem; font-size: 13px;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-img { display: none; }
+      .timeline-item { grid-template-columns: 1fr; gap: .25rem; }
+      .timeline-date { padding-top: 0; }
+      .cs-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .section { padding: 64px 0; }
+    }
+    @media (max-width: 480px) {
+      .proj-grid { grid-template-columns: 1fr; }
+      .hero-cta  { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ════════════════════════════════════════════════════════════════ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="#home" class="nav-brand">
+      <!-- ← EDIT: Your initials or short name -->
+      Your<span>Name</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#case-studies">Case Studies</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact" class="btn btn-gold">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about"        onclick="closeMobileMenu()">About</a>
+  <a href="#experience"   onclick="closeMobileMenu()">Experience</a>
+  <a href="#case-studies" onclick="closeMobileMenu()">Case Studies</a>
+  <a href="#projects"     onclick="closeMobileMenu()">Projects</a>
+  <a href="#contact"      onclick="closeMobileMenu()" class="btn btn-gold">Contact</a>
+</div>
+
+<!-- ══ HERO ═══════════════════════════════════════════════════════════════ -->
+<section id="home" class="section">
+  <div class="container" style="position:relative">
+    <div class="hero-label">
+      <!-- ← EDIT: e.g. "Product Manager · Berlin" -->
+      Your Role · Your Location
+    </div>
+    <h1 class="hero-title">
+      <!-- ← EDIT: Your name. The <em> tag adds the gold colour. -->
+      Hi, I'm <em>Your Name</em>.<br>
+      I build things that matter.
+    </h1>
+    <p class="hero-sub">
+      <!-- ← EDIT: One or two sentences about what you do. -->
+      A short, punchy description of what you do, who you do it for, and what makes you different. Keep it under 30 words.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-gold">See my work</a>
+      <a href="#contact"  class="btn btn-outline">Get in touch</a>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">scroll</div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══════════════════════════════════════════════════════════════ -->
+<section id="about" class="section section-alt">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img" aria-hidden="true">🙂</div><!-- ← EDIT: replace emoji with <img> tag if you have a photo -->
+      <div class="about-text">
+        <div class="section-label">About me</div>
+        <h2 class="section-title">A bit about who I am</h2>
+        <!-- ← EDIT: Replace these paragraphs with your own bio. -->
+        <p>
+          I'm a [your profession] with [X] years of experience in [your field]. I specialise in [your specialism] and have worked with [types of clients or companies].
+        </p>
+        <p>
+          Outside of work, I'm passionate about [interest 1], [interest 2], and [interest 3]. I'm currently based in [city] and open to [remote/on-site/freelance] opportunities.
+        </p>
+        <div class="about-tags">
+          <!-- ← EDIT: Replace with your own skills/keywords -->
+          <span class="tag">Skill one</span>
+          <span class="tag">Skill two</span>
+          <span class="tag">Skill three</span>
+          <span class="tag">Skill four</span>
+          <span class="tag">Skill five</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPERIENCE ═════════════════════════════════════════════════════════ -->
+<section id="experience" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">Past work</div>
+      <h2 class="section-title">Where I've worked</h2>
+    </div>
+    <div class="timeline">
+
+      <!-- ← EDIT: Duplicate or remove these blocks for your own experience -->
+      <div class="timeline-item">
+        <div class="timeline-date">2022 — Present</div>
+        <div>
+          <div class="timeline-role">Senior [Job Title]</div>
+          <div class="timeline-co">Company Name</div>
+          <div class="timeline-desc">
+            Brief description of what you did here. Focus on impact: what you built, improved, or delivered. Keep it to 2–3 sentences.
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">2019 — 2022</div>
+        <div>
+          <div class="timeline-role">[Job Title]</div>
+          <div class="timeline-co">Company Name</div>
+          <div class="timeline-desc">
+            Brief description of what you did here. Focus on impact: what you built, improved, or delivered. Keep it to 2–3 sentences.
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-date">2017 — 2019</div>
+        <div>
+          <div class="timeline-role">[Job Title]</div>
+          <div class="timeline-co">Company Name</div>
+          <div class="timeline-desc">
+            Brief description of what you did here. Focus on impact: what you built, improved, or delivered. Keep it to 2–3 sentences.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CASE STUDIES ═══════════════════════════════════════════════════════ -->
+<section id="case-studies" class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">Case Studies</div>
+      <h2 class="section-title">Deep dives into selected work</h2>
+      <p class="section-sub">
+        A closer look at the problems, decisions, and outcomes behind some of my most meaningful projects.
+      </p>
+    </div>
+    <div class="cs-grid">
+
+      <!-- ← EDIT: Replace with your own case studies -->
+      <div class="cs-card">
+        <div class="cs-img">📊</div><!-- ← EDIT: emoji or <img> -->
+        <div class="cs-body">
+          <div class="cs-label">Strategy · Research</div>
+          <div class="cs-title">Case Study Title One</div>
+          <div class="cs-desc">
+            A 1–2 sentence summary of the challenge, what you did, and the outcome. E.g. "Redesigned the onboarding flow for a B2B SaaS product, reducing time-to-value from 14 days to 3."
+          </div>
+          <a href="#" class="cs-link">Read case study →</a><!-- ← EDIT: link to a PDF or page -->
+        </div>
+      </div>
+
+      <div class="cs-card">
+        <div class="cs-img">🔬</div>
+        <div class="cs-body">
+          <div class="cs-label">Product · UX</div>
+          <div class="cs-title">Case Study Title Two</div>
+          <div class="cs-desc">
+            A 1–2 sentence summary of the challenge, what you did, and the outcome. Make it specific and results-driven.
+          </div>
+          <a href="#" class="cs-link">Read case study →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROJECTS ════════════════════════════════════════════════════════════ -->
+<section id="projects" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">Projects</div>
+      <h2 class="section-title">Things I've built</h2>
+      <p class="section-sub">
+        Side projects, tools, and experiments — built out of curiosity, necessity, or both.
+      </p>
+    </div>
+    <div class="proj-grid">
+
+      <!-- ─ DeutschTrainer card (keep this one) ─ -->
+      <div class="proj-card">
+        <div class="proj-icon">🇩🇪</div>
+        <div class="proj-label">Language Learning · AI</div>
+        <div class="proj-title">DeutschTrainer C1</div>
+        <div class="proj-desc">
+          An interactive German C1 trainer with 5 exercise types — fill-in-the-blank, multiple choice, sentence transformation, translation, and error correction. Immediate feedback on every answer.
+        </div>
+        <div class="proj-tags">
+          <span class="proj-tag">HTML</span>
+          <span class="proj-tag">JavaScript</span>
+          <span class="proj-tag gold">AI-powered</span>
+        </div>
+        <a href="./deutschtrainer-demo.html" class="proj-link">Try the demo →</a>
+      </div>
+
+      <!-- ← EDIT: Add your own projects below. Duplicate this block. -->
+      <div class="proj-card">
+        <div class="proj-icon">🛠️</div><!-- ← EDIT: emoji representing the project -->
+        <div class="proj-label">Category · Type</div><!-- ← EDIT -->
+        <div class="proj-title">Project Name</div><!-- ← EDIT -->
+        <div class="proj-desc">
+          <!-- ← EDIT: 2–3 sentences describing what it does and why you built it. -->
+          A short description of this project. What problem does it solve? Who is it for? What makes it interesting?
+        </div>
+        <div class="proj-tags">
+          <span class="proj-tag">Tag 1</span><!-- ← EDIT -->
+          <span class="proj-tag">Tag 2</span>
+        </div>
+        <a href="#" class="proj-link outline">View project →</a><!-- ← EDIT: link to GitHub, live demo, etc. -->
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-icon">💡</div>
+        <div class="proj-label">Category · Type</div>
+        <div class="proj-title">Another Project</div>
+        <div class="proj-desc">
+          A short description of this project. What problem does it solve? Who is it for? What makes it interesting?
+        </div>
+        <div class="proj-tags">
+          <span class="proj-tag">Tag 1</span>
+          <span class="proj-tag">Tag 2</span>
+        </div>
+        <a href="#" class="proj-link outline">View project →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ════════════════════════════════════════════════════════════ -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div>
+        <div class="section-label">Contact</div>
+        <h2 class="section-title">Let's talk</h2>
+        <p class="section-sub">
+          <!-- ← EDIT -->
+          Whether you have a project in mind, a question, or just want to say hello — my inbox is open.
+        </p>
+        <!-- ← EDIT: remove this if not available -->
+        <div class="availability" style="margin-top:1.5rem">
+          <span class="avail-dot"></span>
+          Available for new opportunities
+        </div>
+      </div>
+      <div>
+        <!-- ← EDIT: Replace all href and text values below -->
+        <a href="mailto:you@email.com" class="contact-link">
+          <span class="contact-link-icon">✉️</span>
+          <div>
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-val">you@email.com</div>
+          </div>
+        </a>
+        <a href="https://linkedin.com/in/yourprofile" target="_blank" class="contact-link">
+          <span class="contact-link-icon">💼</span>
+          <div>
+            <div class="contact-link-label">LinkedIn</div>
+            <div class="contact-link-val">linkedin.com/in/yourprofile</div>
+          </div>
+        </a>
+        <a href="https://github.com/yourusername" target="_blank" class="contact-link">
+          <span class="contact-link-icon">🐙</span>
+          <div>
+            <div class="contact-link-label">GitHub</div>
+            <div class="contact-link-val">github.com/yourusername</div>
+          </div>
+        </a>
+        <p class="contact-note">
+          <!-- ← EDIT: optional note -->
+          I typically respond within 24–48 hours.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ═════════════════════════════════════════════════════════════ -->
+<footer>
+  <!-- ← EDIT: your name -->
+  © 2025 Your Name · Built with GitHub Pages
+</footer>
+
+<!-- ══ SCRIPT ═════════════════════════════════════════════════════════════ -->
+<script>
+// ── Mobile menu ──────────────────────────────────────────────────────────────
+const hamburger   = document.getElementById('hamburger');
+const mobileMenu  = document.getElementById('mobile-menu');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+
+function closeMobileMenu() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+
+// Close mobile menu on outside click
+document.addEventListener('click', (e) => {
+  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+    closeMobileMenu();
+  }
+});
+
+// ── Active nav link as user scrolls ──────────────────────────────────────────
+const sections = document.querySelectorAll('section[id]');
+const navLinks  = document.querySelectorAll('.nav-links a[href^="#"]');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, {
+  rootMargin: '-40% 0px -55% 0px',  // trigger when section is in the middle third of viewport
+  threshold: 0,
+});
+
+sections.forEach(s => observer.observe(s));
+
+// ── Scroll-reveal animation (fade in on scroll) ───────────────────────────────
+const revealStyle = document.createElement('style');
+revealStyle.textContent = `
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+`;
+document.head.appendChild(revealStyle);
+
+// Apply reveal to cards and timeline items
+document.querySelectorAll('.proj-card, .cs-card, .timeline-item, .about-grid > div').forEach((el, i) => {
+  el.classList.add('reveal');
+  el.style.transitionDelay = (i * 80) + 'ms';
+});
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>
