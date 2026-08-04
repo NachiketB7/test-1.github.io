@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Same Technology, Three Starting Lines — VGI Market Prioritization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1420; --panel:#101C2C; --panel2:#152238; --line:#263449; --line-soft:#1B2A3E;
+    --copper:#E8934A; --copper-dim:#8A5A2E; --cyan:#4FD8C4; --cyan-dim:#2E6E64;
+    --white:#EDF2F7; --muted:#8AA0B8; --muted2:#5E7288; --r:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink);color:var(--white);font-family:"IBM Plex Sans",system-ui,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  a{color:var(--cyan)}
+  :focus-visible{outline:2px solid var(--copper);outline-offset:3px}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:12px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--cyan-dim);
+    border-radius:99px;padding:6px 14px;background:rgba(79,216,196,.06)}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  header{padding:60px 0 40px;border-bottom:1px solid var(--line-soft)}
+  h1{font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-size:clamp(34px,5.8vw,56px);
+    line-height:1.0;text-transform:uppercase;margin:20px 0 14px;letter-spacing:.005em}
+  h1 .accent{color:var(--copper)}
+  .lede{font-size:17px;color:var(--muted);max-width:64ch;margin:0 0 24px}
+  .meta-row{display:flex;gap:26px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted2)}
+  .meta-row b{color:var(--white);font-weight:600}
+
+  section{padding:52px 0;border-bottom:1px solid var(--line-soft)}
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--copper);margin-bottom:10px}
+  h2{font-family:"Big Shoulders Display",sans-serif;font-weight:700;font-size:clamp(24px,3.6vw,32px);
+    text-transform:uppercase;letter-spacing:.01em;margin:0 0 16px}
+  p.body{font-size:16px;color:#C9D3DF;max-width:70ch}
+  p.body + p.body{margin-top:12px}
+  .note{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted2);margin-top:16px;
+    display:flex;gap:8px;align-items:flex-start;max-width:64ch}
+  .note::before{content:"◆";color:var(--copper);font-size:9px;margin-top:3px}
+
+  .stake-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:22px}
+  .stake{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 16px;position:relative}
+  .stake::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;background:var(--cyan);border-radius:3px}
+  .stake h3{margin:0 0 6px;font-size:15px;font-weight:600;padding-left:12px}
+  .stake p{margin:0;font-size:13.5px;color:var(--muted);padding-left:12px}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:22px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+  .kpi .k-name{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--copper);text-transform:uppercase;
+    letter-spacing:.06em;margin-bottom:8px}
+  .kpi .k-type{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted2);margin-bottom:8px}
+  .kpi p{margin:0;font-size:13.5px;color:var(--muted)}
+
+  .market-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin-top:22px}
+  .market-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+  .market-card h3{margin:0 0 4px;font-family:"Big Shoulders Display",sans-serif;font-size:24px;
+    text-transform:uppercase;letter-spacing:.01em}
+  .market-card .tagline{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--cyan);margin-bottom:16px}
+  .axis-row{margin-bottom:14px}
+  .axis-row:last-child{margin-bottom:0}
+  .axis-name{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted2);
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;display:flex;justify-content:space-between}
+  .axis-name .label{color:var(--white);font-weight:600;text-transform:none;letter-spacing:0}
+  .segs{display:flex;gap:4px}
+  .seg{flex:1;height:6px;border-radius:3px;background:var(--line-soft)}
+  .seg.on{background:var(--cyan)}
+  .facts{margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line-soft);list-style:none}
+  .facts li{font-size:13px;color:var(--muted);margin-bottom:8px;padding-left:14px;position:relative}
+  .facts li::before{content:"—";position:absolute;left:0;color:var(--muted2)}
+  .src{display:block;margin-top:3px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted2)}
+
+  .matrix-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-top:20px}
+  .matrix-hint{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted2);margin-bottom:16px}
+  table.matrix{width:100%;border-collapse:collapse}
+  table.matrix th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;
+    user-select:none;font-family:"IBM Plex Mono",monospace;font-size:11px;text-transform:uppercase;
+    letter-spacing:.04em;color:var(--muted);transition:.15s}
+  table.matrix th:hover{color:var(--copper)}
+  table.matrix th.active{color:var(--copper)}
+  table.matrix th .arrow{opacity:0;margin-left:4px}
+  table.matrix th.active .arrow{opacity:1}
+  table.matrix td{padding:14px 12px;border-bottom:1px solid var(--line-soft);font-size:14px}
+  table.matrix td.market-name{font-family:"Big Shoulders Display",sans-serif;font-size:18px;
+    text-transform:uppercase;color:var(--white)}
+  .cell-rating{display:flex;align-items:center;gap:8px}
+  .cell-segs{display:flex;gap:3px}
+  .cell-seg{width:16px;height:6px;border-radius:3px;background:var(--line-soft)}
+  .cell-seg.on{background:var(--cyan)}
+  .cell-label{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted)}
+  .focus-note{margin-top:16px;padding:14px 16px;background:var(--panel2);border-radius:10px;
+    border-left:3px solid var(--copper);font-size:13.5px;color:#C9D3DF}
+  .focus-note b{color:var(--copper)}
+
+  .reason-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:22px}
+  .reason{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+  .reason .obj{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--copper);text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:8px}
+  .reason .mkt{font-family:"Big Shoulders Display",sans-serif;font-size:20px;text-transform:uppercase;margin-bottom:8px}
+  .reason p{margin:0;font-size:13.5px;color:var(--muted)}
+
+  .qlist{list-style:none;padding:0;margin:20px 0 0}
+  .qlist li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:14.5px;color:#C9D3DF}
+  .qlist li:last-child{border-bottom:none}
+  .qlist .qmark{font-family:"Big Shoulders Display",sans-serif;color:var(--copper);font-size:18px;line-height:1}
+
+  .closing{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+  .closing p.body{color:#C9D3DF}
+  .sources{margin-top:18px}
+  .sources li{font-size:12px;color:var(--muted2);margin-bottom:6px;font-family:"IBM Plex Mono",monospace}
+
+  footer{padding:36px 0 64px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted2)}
+  footer a{color:var(--muted)}
+
+  @media (max-width:640px){
+    table.matrix{font-size:12px}
+    .cell-label{display:none}
+    .meta-row{gap:14px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow"><span class="dot"></span>Case Study — Market Research Brief</span>
+    <h1>Same technology,<br>three different <span class="accent">starting lines.</span></h1>
+    <p class="lede">A research-based prioritization framework for sequencing vehicle-grid integration across Germany, France, and the UK, built from public regulatory and market data, not assumptions.</p>
+    <div class="meta-row">
+      <span><b>Scope:</b> Germany · France · UK</span>
+      <span><b>Method:</b> Public research, structured framework</span>
+      <span><b>Status:</b> Independent analysis, June 2026</span>
+    </div>
+  </header>
+
+  <section id="problem">
+    <div class="kicker">01 — Problem Statement</div>
+    <h2>Three markets. Not equal effort, not equal timing.</h2>
+    <p class="body">The Mobility House's VGI platform can expand into Germany, France, and the UK, but not with equal effort everywhere at once. Each market sits at a different point on regulation, infrastructure readiness, and commercial proof, so a single global launch plan risks moving too early where the ground isn't ready, or too late where the market's own momentum has already been captured.</p>
+    <p class="body">The problem this brief addresses: which market should get product and partnership investment first, and on what evidence, not instinct, is that decision defensible.</p>
+    <div class="note">This is independent research using public sources, not internal company data. Treat the framework as a starting structure, not a verdict.</div>
+  </section>
+
+  <section id="stakeholders">
+    <div class="kicker">02 — Stakeholders</div>
+    <h2>Four parties, one shared decision</h2>
+    <p class="body">Sequencing a market entry isn't only a research question, it's a call several groups have a real stake in getting right.</p>
+    <div class="stake-grid">
+      <div class="stake"><h3>Regional Leadership</h3><p>Needs a defensible sequence to commit budget and headcount against, not just "all three at once."</p></div>
+      <div class="stake"><h3>Partner &amp; OEM Teams</h3><p>Own the relationships that make or break entry speed in each market.</p></div>
+      <div class="stake"><h3>Regulatory Affairs</h3><p>Tracks how fast each market's rules are actually moving versus their stated plans.</p></div>
+      <div class="stake"><h3>Local Customers</h3><p>Fleet operators or drivers in each market, whose adoption ultimately validates the sequencing call.</p></div>
+    </div>
+  </section>
+
+  <section id="markets">
+    <div class="kicker">03 — Market Research</div>
+    <h2>Three markets, three different leads</h2>
+    <p class="body">Rated across three axes: how clear the regulation is, how ready the infrastructure and vehicle compatibility are, and how much real commercial traction already exists. Ratings reflect a synthesis of public reporting, not a precise score.</p>
+
+    <div class="market-grid">
+      <div class="market-card">
+        <h3>Germany</h3>
+        <div class="tagline">Largest fleet, newest green light</div>
+        <div class="axis-row">
+          <div class="axis-name">Regulatory Readiness <span class="label">Newly cleared</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg on"></div><div class="seg"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-name">Infrastructure &amp; Compatibility <span class="label">Early / fragmented</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-name">Commercial Traction <span class="label">Launching 2026</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+        <ul class="facts">
+          <li>Double grid fees for V2G abolished from Jan 2026; MiSpeL framework removes second-meter requirement from April 2026.<span class="src">— BMWE; German Bundestag EnWG amendment, Nov 2025</span></li>
+          <li>1.65M+ BEVs on the road, the largest addressable fleet of the three.<span class="src">— Bundestag EnWG amendment coverage, Nov 2025</span></li>
+          <li>Smart meter rollout under 10%; many small, fragmented grid operators.<span class="src">— The Mobility House knowledge center, V2G country comparison</span></li>
+          <li>TMH's own account: Germany was still finalizing its framework while France and the UK had already removed double fees and rolled out smart meters.<span class="src">— The Mobility House newsroom, Oct 2024</span></li>
+        </ul>
+      </div>
+
+      <div class="market-card">
+        <h3>France</h3>
+        <div class="tagline">Already live, but slow per vehicle</div>
+        <div class="axis-row">
+          <div class="axis-name">Regulatory Readiness <span class="label">Workable, heavy process</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg on"></div><div class="seg"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-name">Infrastructure &amp; Compatibility <span class="label">Narrow but proven</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg on"></div><div class="seg"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-name">Commercial Traction <span class="label">Live today</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div></div>
+        </div>
+        <ul class="facts">
+          <li>Renault, Mobilize, and The Mobility House already run a live, bundled V2G service in France, launched 2024.<span class="src">— The Mobility House newsroom, Oct 2024</span></li>
+          <li>France was named alongside Germany and the UK from the original 2023 partnership announcement as one of three planned launch markets.<span class="src">— Mobilize / TMH partnership announcement, 2023</span></li>
+          <li>V2G still requires formal Enedis authorization and a certified meter, a 3–6 month process per connection.<span class="src">— Enedis smart-charging report; French V2G practitioner guides, 2026</span></li>
+          <li>Renault-Nissan-Mitsubishi's EVVE pilot targets an 8MW virtual battery across 3 regions by 2027.<span class="src">— EVVE project coverage, 2026</span></li>
+        </ul>
+      </div>
+
+      <div class="market-card">
+        <h3>United Kingdom</h3>
+        <div class="tagline">Original co-launch market, ahead on fees &amp; meters</div>
+        <div class="axis-row">
+          <div class="axis-name">Regulatory Readiness <span class="label">Fees &amp; meters resolved</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg on"></div><div class="seg on"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-name">Infrastructure &amp; Compatibility <span class="label">Deep pilots, narrow fit</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg"></div><div class="seg"></div></div>
+        </div>
+        <div class="axis-row">
+          <div class="axis-name">Commercial Traction <span class="label">Live retail product</span></div>
+          <div class="segs"><div class="seg on"></div><div class="seg on"></div><div class="seg"></div></div>
+        </div>
+        <ul class="facts">
+          <li>Named alongside France and Germany from the original 2023 Mobilize/TMH partnership announcement, planned for launch in 2025.<span class="src">— Mobilize / TMH partnership announcement, 2023</span></li>
+          <li>TMH's own account places the UK, like France, ahead of Germany: no double grid fees and a completed smart meter rollout.<span class="src">— The Mobility House newsroom, Oct 2024</span></li>
+          <li>330 V2G devices in Ofgem-backed trials delivered 3M+ "free" miles to participants.<span class="src">— Ofgem V2G case study</span></li>
+          <li>Octopus Power Pack is a live retail V2G tariff, worth up to £725/year, but certified to one vehicle-charger combination.<span class="src">— Ofgem case study; UK V2G market guides, 2026</span></li>
+        </ul>
+        <div class="note" style="margin-top:14px">TMH's own UK go-live status as of mid-2026 isn't independently confirmed by this research, the 2025 target date is the company's stated plan, not a verified launch.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="matrix">
+    <div class="kicker">04 — The Framework</div>
+    <h2>Sort by what matters most, and the order changes</h2>
+    <p class="body">The point isn't a single ranking, it's that different priorities produce different answers. Click a column to sort by that axis and see how the sequencing recommendation shifts.</p>
+
+    <div class="matrix-card">
+      <div class="matrix-hint">Click a column header to sort</div>
+      <table class="matrix" id="matrixTable">
+        <thead>
+          <tr>
+            <th data-key="market" class="active">Market <span class="arrow">↓</span></th>
+            <th data-key="reg">Regulatory Readiness <span class="arrow">↓</span></th>
+            <th data-key="infra">Infrastructure &amp; Compatibility <span class="arrow">↓</span></th>
+            <th data-key="traction">Commercial Traction <span class="arrow">↓</span></th>
+          </tr>
+        </thead>
+        <tbody id="matrixBody"></tbody>
+      </table>
+      <div class="focus-note" id="focusNote"></div>
+    </div>
+  </section>
+
+  <section id="reasoning">
+    <div class="kicker">05 — What This Means for Sequencing</div>
+    <h2>The right answer depends on what you're optimizing for</h2>
+    <div class="reason-grid">
+      <div class="reason">
+        <div class="obj">If optimizing for lowest execution risk</div>
+        <div class="mkt">→ France</div>
+        <p>A live, bundled commercial model already exists. Scaling here means replicating and refining a known playbook, not inventing one.</p>
+      </div>
+      <div class="reason">
+        <div class="obj">If optimizing for regulatory tailwind</div>
+        <div class="mkt">→ UK, alongside France</div>
+        <p>Both markets had already resolved the two biggest V2G barriers, double fees and smart meters, while Germany was still catching up. The UK was named a co-launch market from the start.</p>
+      </div>
+      <div class="reason">
+        <div class="obj">If optimizing for long-term scale</div>
+        <div class="mkt">→ Germany</div>
+        <p>The largest fleet by far, but infrastructure and DSO fragmentation suggest a partner-led entry rather than a direct one, at least initially.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="success">
+    <div class="kicker">06 — Defining Success</div>
+    <h2>How we'd know the sequencing call was right</h2>
+    <p class="body">Having looked at the evidence, it's worth naming what "this was the right call" would actually look like six to twelve months later, before moving to what this brief still can't answer.</p>
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="k-name">Time to First Live Deployment</div>
+        <div class="k-type">Execution speed</div>
+        <p>How long from the decision to a real, paying customer live in that market.</p>
+      </div>
+      <div class="kpi">
+        <div class="k-name">Confirmed Partner Agreements</div>
+        <div class="k-type">Market access</div>
+        <p>OEM, energy supplier, or grid-operator agreements signed within the first two quarters.</p>
+      </div>
+      <div class="kpi">
+        <div class="k-name">Regulatory Milestones Met on Schedule</div>
+        <div class="k-type">Risk tracking</div>
+        <p>Whether the market's own regulatory timeline, MiSpeL, Enedis approvals, Ofgem rules, actually holds.</p>
+      </div>
+      <div class="kpi">
+        <div class="k-name">Customer Enrollment Rate</div>
+        <div class="k-type">Demand validation</div>
+        <p>Fleet or driver sign-up in the first 90 days post-launch, the earliest real signal the sequencing bet paid off.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="open">
+    <div class="kicker">07 — What I'd Still Need to Know</div>
+    <h2>This framework has a ceiling</h2>
+    <p class="body">Public research can map the external landscape. It can't see internal reality, and a real prioritization call needs both.</p>
+    <ul class="qlist">
+      <li><span class="qmark">?</span>What existing OEM and dealer relationships does the company already have in each market?</li>
+      <li><span class="qmark">?</span>Is the France integration work reusable, or does each market need its own build?</li>
+      <li><span class="qmark">?</span>What does current customer demand or pipeline actually look like, market by market?</li>
+      <li><span class="qmark">?</span>Has the UK launch, planned since 2023 alongside France, actually gone live, and if not, what's holding it?</li>
+    </ul>
+  </section>
+
+  <section id="why" style="border-bottom:none">
+    <div class="kicker">08 — Why I Built This</div>
+    <div class="closing">
+      <p class="body">I don't have direct experience in energy markets or grid regulation. What I wanted to test was whether the way I approach ambiguous, multi-sided decisions, gathering real evidence, making the trade-offs explicit, and being honest about what I still don't know, holds up in a domain I'm new to. I've run this kind of structured prioritization before: steering the selection, RFQ, and multi-year delivery of an external development partnership, and leading discovery for a full product rebuild by identifying and validating new use cases before committing to build.</p>
+      <p class="body">This brief is a genuine first pass, not a final answer. I'd welcome the chance to pressure-test it against what the team already knows.</p>
+      <p class="note" style="margin-top:18px">Sources are cited inline, directly under each fact, throughout this brief.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div>[Your Name] · Product Owner · <a href="#">Portfolio</a> · <a href="#">LinkedIn</a> · <a href="#">Contact</a></div>
+  </footer>
+</div>
+
+<script>
+const DATA = [
+  {market:"Germany", reg:2, regLabel:"Newly cleared", infra:1, infraLabel:"Early / fragmented", traction:1, tractionLabel:"Launching 2026"},
+  {market:"France", reg:2, regLabel:"Workable, heavy process", infra:2, infraLabel:"Narrow but proven", traction:3, tractionLabel:"Live today"},
+  {market:"United Kingdom", reg:3, regLabel:"Fees & meters resolved", infra:1, infraLabel:"Deep pilots, narrow fit", traction:2, tractionLabel:"Live retail product"},
+];
+
+const FOCUS_NOTES = {
+  market: "Alphabetical / default order.",
+  reg: "Sorted by regulatory readiness — <b>the UK and France lead</b>, both had already resolved double grid fees and smart meter rollout while Germany was still finalizing its framework, per The Mobility House's own account.",
+  infra: "Sorted by infrastructure and compatibility — France's narrow-but-proven vehicle support currently edges ahead of Germany's and the UK's earlier-stage rollouts.",
+  traction: "Sorted by commercial traction — <b>France leads clearly</b>, since a live, bundled V2G product already exists there today; the UK was planned as a co-launch market but its go-live isn't independently confirmed here."
+};
+
+let sortKey="market", sortDir=1;
+
+function segHTML(n){
+  let out="";
+  for(let i=0;i<3;i++) out += `<span class="cell-seg${i<n?" on":""}"></span>`;
+  return out;
+}
+
+function render(){
+  let rows=[...DATA];
+  if(sortKey!=="market"){
+    rows.sort((a,b)=> (b[sortKey]-a[sortKey]) * sortDir);
+  } else {
+    rows.sort((a,b)=> a.market.localeCompare(b.market) * sortDir);
+  }
+  const body=document.getElementById("matrixBody");
+  body.innerHTML = rows.map(r=>`
+    <tr>
+      <td class="market-name">${r.market}</td>
+      <td><div class="cell-rating"><div class="cell-segs">${segHTML(r.reg)}</div><span class="cell-label">${r.regLabel}</span></div></td>
+      <td><div class="cell-rating"><div class="cell-segs">${segHTML(r.infra)}</div><span class="cell-label">${r.infraLabel}</span></div></td>
+      <td><div class="cell-rating"><div class="cell-segs">${segHTML(r.traction)}</div><span class="cell-label">${r.tractionLabel}</span></div></td>
+    </tr>
+  `).join("");
+  document.getElementById("focusNote").innerHTML = FOCUS_NOTES[sortKey];
+  document.querySelectorAll("table.matrix th").forEach(th=>{
+    th.classList.toggle("active", th.dataset.key===sortKey);
+  });
+}
+
+document.querySelectorAll("table.matrix th").forEach(th=>{
+  th.addEventListener("click", ()=>{
+    const key=th.dataset.key;
+    if(sortKey===key){ sortDir*=-1; } else { sortKey=key; sortDir=-1; }
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
