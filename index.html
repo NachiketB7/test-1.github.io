@@ -364,12 +364,11 @@
 </div>
 
 <!-- ══ HERO ═══════════════════════════════════════════════════════════════ -->
-<section id="home" class="section">
-  <div class="container" style="position:relative">
-    <div class="hero-label">
+<section id="home"> 
+  <div class="hero-left">
+  <div class="hero-label">Product Owner · Munich</div>
       <!-- ← EDIT: e.g. "Product Manager · Berlin" -->
-      Product Owner · Munich
-    </div>
+    <!--</div> -->
     <h1 class="hero-title">
       <!-- ← EDIT: Your name. The <em> tag adds the gold colour. -->
       Hi, I'm <em>Nachiket</em>.<br>
@@ -381,9 +380,12 @@
     </p>
     <div class="hero-cta">
       <a href="#projects" class="btn btn-gold">See my work</a>
-      <a href="#contact"  class="btn btn-outline">Get in touch</a>
+      <a href="#contact"  class="btn btn-outline"
+         style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)">
+            Get in touch</a>
     </div>
-    <div class="hero-scroll" aria-hidden="true">scroll</div>
+  <div class="hero-right">
+    <canvas id="hero-canvas"></canvas>
   </div>
 </section>
 
@@ -624,6 +626,115 @@
 
 <!-- ══ SCRIPT ═════════════════════════════════════════════════════════════ -->
 <script>
+  // ── Hero network animation ────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth  * dpr;
+    canvas.height = canvas.offsetHeight * dpr;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const img = new Image();
+  img.src = './photo1.jpeg';
+
+  const LABELS = ['Engineering','Stakeholders','Design','Users','Data','Strategy','QA'];
+  const PHOTO_R = 36;
+  let nodes = [], centerPulse = 0;
+
+  function initNodes() {
+    const cx = canvas.width * .5, cy = canvas.height * .5;
+    nodes = LABELS.map((label, i) => {
+      const angle = (i / LABELS.length) * Math.PI * 2 - Math.PI / 2;
+      const r = Math.min(canvas.width, canvas.height) * .33;
+      return {
+        label,
+        x: cx + (Math.random() - .5) * canvas.width  * .8,
+        y: cy + (Math.random() - .5) * canvas.height * .8,
+        tx: cx + Math.cos(angle) * r,
+        ty: cy + Math.sin(angle) * r,
+        progress: 0, speed: .01 + Math.random() * .007,
+        connected: false, pulse: Math.random() * Math.PI * 2,
+      };
+    });
+  }
+  initNodes();
+
+  function drawPhoto(x, y, r) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(201,168,76,0.7)';
+    ctx.lineWidth = 2 * dpr;
+    ctx.beginPath(); ctx.arc(x, y, r + 2 * dpr, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.clip();
+    if (img.complete && img.naturalWidth > 0) {
+      ctx.drawImage(img, x - r, y - r, r * 2, r * 2);
+    } else {
+      ctx.fillStyle = '#334155'; ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    const cx = W * .5, cy = H * .5, pr = PHOTO_R * dpr;
+    ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, W, H);
+    centerPulse += .03;
+
+    nodes.forEach(n => {
+      n.progress = Math.min(1, n.progress + n.speed);
+      n.x += (n.tx - n.x) * n.speed * 1.4;
+      n.y += (n.ty - n.y) * n.speed * 1.4;
+      n.pulse += .022;
+      if (n.progress > .8) n.connected = true;
+    });
+
+    nodes.forEach(n => {
+      if (!n.connected) return;
+      const alpha = Math.min(1, (n.progress - .8) / .2) * .3;
+      ctx.strokeStyle = `rgba(201,168,76,${alpha})`;
+      ctx.lineWidth = dpr * .8;
+      ctx.setLineDash([4 * dpr, 6 * dpr]);
+      ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(cx, cy); ctx.stroke();
+      ctx.setLineDash([]);
+      const t = ((Date.now() * .0005) + n.pulse) % 1;
+      ctx.fillStyle = `rgba(201,168,76,${alpha * 2})`;
+      ctx.beginPath();
+      ctx.arc(n.x + (cx - n.x) * t, n.y + (cy - n.y) * t, 2 * dpr, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    nodes.forEach(n => {
+      ctx.fillStyle = `rgba(99,179,237,${.06 + Math.sin(n.pulse) * .03})`;
+      ctx.beginPath(); ctx.arc(n.x, n.y, 10 * dpr, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(99,179,237,0.75)';
+      ctx.beginPath(); ctx.arc(n.x, n.y, 4 * dpr, 0, Math.PI * 2); ctx.fill();
+      const la = Math.min(1, n.progress * 1.5) * .65;
+      ctx.fillStyle = `rgba(255,255,255,${la})`;
+      ctx.font = `${9 * dpr}px Inter,sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, n.x, n.y - 9 * dpr);
+    });
+
+    [1.9, 1.5, 1.15].forEach((mult, i) => {
+      const p = Math.sin(centerPulse - i * .8) * .5 + .5;
+      ctx.strokeStyle = `rgba(201,168,76,${.05 + p * .07})`;
+      ctx.lineWidth = dpr;
+      ctx.beginPath(); ctx.arc(cx, cy, pr * mult + p * 4 * dpr, 0, Math.PI * 2); ctx.stroke();
+    });
+
+    drawPhoto(cx, cy, pr);
+    ctx.textAlign = 'left';
+    requestAnimationFrame(draw);
+  }
+
+  img.complete ? draw() : (img.onload = draw, img.onerror = draw);
+})();
+  
   function toggleTheme() {
   // add or remove the 'dark' class on body
   document.body.classList.toggle('dark');
