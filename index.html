@@ -340,6 +340,33 @@
     body.dark .nav-links .btn-gold {
     color: #ffffff;
     }
+      /* -Stats bar- */
+  .stats-bar {
+  background: #1a1a2e;
+  padding: 2.5rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  }
+  .stat {
+  text-align: center;
+  border-right: 0.5px solid rgba(255,255,255,.1);
+  padding-right: 1rem;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+  font-family: 'Lora', serif;
+  font-size: 40px; font-weight: 600;
+  color: #c9a84c; line-height: 1; margin-bottom: 6px;
+  }
+  .stat-label {
+  font-size: 12px; color: rgba(255,255,255,.5);
+  text-transform: uppercase; letter-spacing: .06em;
+  }
+  @media (max-width: 768px) {
+  .stats-bar { grid-template-columns: 1fr 1fr; padding: 2rem 1.5rem; gap: 1.5rem; }
+}
+    
   </style>
 </head>
 <body>
@@ -385,8 +412,9 @@
       <!-- ← EDIT: Your name. The <em> tag adds the gold colour. -->
       Hi, I'm <em>Nachiket</em>.<br>
       I build things that matter.
-    </h1>Data-driven Product Owner. Fewer opinions, better decisions.
+    </h1> 
     <p class="hero-sub">
+    Data-driven Product Owner. Fewer opinions, better decisions.
       <!-- ← EDIT: One or two sentences about what you do. -->
     <!-- ← Turning data into insights to enable better decision making.-->
     </p>
@@ -401,7 +429,27 @@
     <canvas id="hero-canvas"></canvas>
   </div>
 </section>
-
+  
+<!-- ══ STATS ══════════════════════════════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num" id="stat1">0</div>
+    <div class="stat-label">Years Experience</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat2">0</div>
+    <div class="stat-label">Products Shipped</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat3">0</div>
+    <div class="stat-label">Engineers Worked With</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat4">0</div>
+    <div class="stat-label">Stakeholders Managed</div>
+  </div>
+</div>
+  
 <!-- ══ ABOUT ══════════════════════════════════════════════════════════════ -->
 <section id="about" class="section section-alt">
   <div class="container">
@@ -639,6 +687,41 @@
 
 <!-- ══ SCRIPT ═════════════════════════════════════════════════════════════ -->
 <script>
+  
+// ── Stats counter animation ───────────────────────────────────────────────────
+function animateCount(id, target, suffix) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let start = null;
+  const duration = 1600;
+  function step(ts) {
+    if (!start) start = ts;
+    const progress = Math.min((ts - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(eased * target) + (suffix || '');
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const statsTargets = [
+  { id: 'stat1', val: 3,  suf: '+' },
+  { id: 'stat2', val: 12, suf: ''  },
+  { id: 'stat3', val: 40, suf: '+' },
+  { id: 'stat4', val: 25, suf: '+' },
+];
+
+let statsAnimated = false;
+const statsObserver = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting && !statsAnimated) {
+    statsAnimated = true;
+    statsTargets.forEach(t => animateCount(t.id, t.val, t.suf));
+  }
+}, { threshold: .4 });
+
+const statsBarEl = document.querySelector('.stats-bar');
+if (statsBarEl) statsObserver.observe(statsBarEl);
+
   // ── Hero network animation ────────────────────────────────────────────────────
 (function(){
   const canvas = document.getElementById('hero-canvas');
