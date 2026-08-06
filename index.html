@@ -736,7 +736,7 @@
       ctx.beginPath(); ctx.arc(n.x, n.y, 4 * dpr, 0, Math.PI * 2); ctx.fill();
       const la = Math.min(1, n.progress * 1.5) * .65;
       ctx.fillStyle = `rgba(255,255,255,${la})`;
-      ctx.font = `${9 * dpr}px Inter,sans-serif`;
+      ctx.font = `${13 * dpr}px 'Lora',serif`;
       ctx.textAlign = 'center';
       ctx.fillText(n.label, n.x, n.y - 9 * dpr);
     });
