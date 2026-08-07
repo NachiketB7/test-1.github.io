@@ -693,7 +693,27 @@
 
 <!-- ══ SCRIPT ═════════════════════════════════════════════════════════════ -->
 <script>
-  
+/ ── Dark mode toggle ──────────────────────────────────────────────────────────
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+}
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  document.body.classList.add('dark');
+  document.getElementById('theme-btn').textContent = '☀️';
+}
+
+if (!savedTheme) {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (prefersDark) {
+    document.body.classList.add('dark');
+    document.getElementById('theme-btn').textContent = '☀️';
+  }
+} 
 // ── Stats counter animation ───────────────────────────────────────────────────
 function animateCount(id, target, suffix) {
   const el = document.getElementById(id);
