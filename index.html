@@ -185,6 +185,12 @@
   z-index: 2;
 }
 .hero-right { position: relative; overflow: hidden; min-height: 400px; }
+  .hero-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
 #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .hero-label  { color: #c9a84c !important; }
 .hero-title  { color: #ffffff !important; }
@@ -426,7 +432,7 @@
     </div>
   </div> 
     <div class="hero-right">
-    <canvas id="hero-canvas"></canvas>
+  <img src="./photo1.jpeg" alt="Your Name" class="hero-photo-img"/>
   </div>
 </section>
   
@@ -722,150 +728,7 @@ const statsObserver = new IntersectionObserver((entries) => {
 const statsBarEl = document.querySelector('.stats-bar');
 if (statsBarEl) statsObserver.observe(statsBarEl);
 
-  // ── Hero network animation ────────────────────────────────────────────────────
-(function(){
-  const canvas = document.getElementById('hero-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-
-  function resize() {
-    canvas.width  = canvas.offsetWidth  * dpr;
-    canvas.height = canvas.offsetHeight * dpr;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const img = new Image();
-  img.src = './photo1.jpeg';
-
-  const LABELS = ['Engineering','Stakeholders','Design','Users','Data','Strategy','QA'];
-  const PHOTO_R = 95;
-  let nodes = [], centerPulse = 0;
-
-  function initNodes() {
-    const cx = canvas.width * .5, cy = canvas.height * .5;
-    nodes = LABELS.map((label, i) => {
-      const angle = (i / LABELS.length) * Math.PI * 2 - Math.PI / 2;
-      const r = Math.min(canvas.width, canvas.height) * .33;
-      return {
-        label,
-        x: cx + (Math.random() - .5) * canvas.width  * .8,
-        y: cy + (Math.random() - .5) * canvas.height * .8,
-        tx: cx + Math.cos(angle) * r,
-        ty: cy + Math.sin(angle) * r,
-        progress: 0, speed: .01 + Math.random() * .007,
-        connected: false, pulse: Math.random() * Math.PI * 2,
-      };
-    });
-  }
-  initNodes();
-
-  function drawPhoto(x, y, r) {
-  const w = r * 2;
-  const h = r * 2.8;
-  const rx = 16 * dpr;
-  ctx.save();
-  ctx.strokeStyle = 'rgba(201,168,76,0.6)';
-  ctx.lineWidth = 2 * dpr;
-  ctx.beginPath();
-  ctx.roundRect(x - w/2 - 2*dpr, y - h/2 - 2*dpr, w + 4*dpr, h + 4*dpr, rx + 2*dpr);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.roundRect(x - w/2, y - h/2, w, h, rx);
-  ctx.clip();
-  if (img.complete && img.naturalWidth > 0) {
-    ctx.drawImage(img, x - w/2, y - h/2, w, h);
-  } else {
-    ctx.fillStyle = '#334155';
-    ctx.fillRect(x - w/2, y - h/2, w, h);
-  }
-  ctx.restore();
-}
-
-  function draw() {
-    const W = canvas.width, H = canvas.height;
-    const cx = W * .5, cy = H * .5, pr = PHOTO_R * dpr;
-    ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, W, H);
-    centerPulse += .03;
-
-    nodes.forEach(n => {
-      n.progress = Math.min(1, n.progress + n.speed);
-      n.x += (n.tx - n.x) * n.speed * 1.4;
-      n.y += (n.ty - n.y) * n.speed * 1.4;
-      n.pulse += .022;
-      if (n.progress > .8) n.connected = true;
-    });
-
-    nodes.forEach(n => {
-      if (!n.connected) return;
-      const alpha = Math.min(1, (n.progress - .8) / .2) * .3;
-      ctx.strokeStyle = `rgba(201,168,76,${alpha})`;
-      ctx.lineWidth = dpr * .8;
-      ctx.setLineDash([4 * dpr, 6 * dpr]);
-      ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(cx, cy); ctx.stroke();
-      ctx.setLineDash([]);
-      const t = ((Date.now() * .0005) + n.pulse) % 1;
-      ctx.fillStyle = `rgba(201,168,76,${alpha * 2})`;
-      ctx.beginPath();
-      ctx.arc(n.x + (cx - n.x) * t, n.y + (cy - n.y) * t, 2 * dpr, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    nodes.forEach(n => {
-      ctx.fillStyle = `rgba(99,179,237,${.06 + Math.sin(n.pulse) * .03})`;
-      ctx.beginPath(); ctx.arc(n.x, n.y, 10 * dpr, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = 'rgba(99,179,237,0.75)';
-      ctx.beginPath(); ctx.arc(n.x, n.y, 4 * dpr, 0, Math.PI * 2); ctx.fill();
-      const la = Math.min(1, n.progress * 1.5) * .65;
-      ctx.fillStyle = `rgba(255,255,255,${la})`;
-      ctx.font = `${13 * dpr}px 'Lora',serif`;
-      ctx.textAlign = 'center';
-      ctx.fillText(n.label, n.x, n.y - 9 * dpr);
-    });
-
-    [1.15, 1.3, 1.5].forEach((mult, i) => {
-  const p = Math.sin(centerPulse - i * .8) * .5 + .5;
-  const rw = pr * 2 * mult + p * 4 * dpr;
-  const rh = pr * 2.8 * mult + p * 4 * dpr;
-  ctx.strokeStyle = `rgba(201,168,76,${.04 + p * .06})`;
-  ctx.lineWidth = dpr;
-  ctx.beginPath();
-  ctx.roundRect(cx - rw/2, cy - rh/2, rw, rh, 18 * dpr);
-  ctx.stroke();
-});
-
-    drawPhoto(cx, cy, pr);
-    ctx.textAlign = 'left';
-    requestAnimationFrame(draw);
-  }
-
-  img.complete ? draw() : (img.onload = draw, img.onerror = draw);
-})();
-  
-  function toggleTheme() {
-  // add or remove the 'dark' class on body
-  document.body.classList.toggle('dark');
-
-  // save the user's choice so it persists on refresh
-  const isDark = document.body.classList.contains('dark');
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-
-  // update the button emoji
-  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
-}
-  const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'dark') {
-  document.body.classList.add('dark');
-  document.getElementById('theme-btn').textContent = '☀️';
-}
-  if (!savedTheme) {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (prefersDark) {
-    document.body.classList.add('dark');
-    document.getElementById('theme-btn').textContent = '☀️';
-  }
-}
+ 
 // ── Mobile menu ──────────────────────────────────────────────────────────────
 const hamburger   = document.getElementById('hamburger');
 const mobileMenu  = document.getElementById('mobile-menu');
