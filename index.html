@@ -252,8 +252,32 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
     .timeline-co   { font-size: 14px; color: var(--gold); font-weight: 500; margin-bottom: .75rem; }
     .timeline-desc { font-size: 15px; color: var(--ink2); line-height: 1.7; text-align: justify; }
 
-    /* ── CASE STUDIES ────────────────────────────────────── */
+    /* ── Cerfications ────────────────────────────────────── */
     .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .cert-grid {
+    grid-template-columns: repeat(3, 1fr);
+    }
+    .cert-img-wrap {
+    height: 140px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--border);
+    }
+    .cert-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    }
+    @media (max-width: 768px) {
+    .cert-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+    .cert-grid { grid-template-columns: 1fr; }
+    }
+    
     .cs-card {
       border-radius: 12px; overflow: hidden;
       border: 1px solid var(--border); background: var(--white);
@@ -401,7 +425,7 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
-      <li><a href="#case-studies">Case Studies</a></li>
+      <li><a href="#certifications">Certifications</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact" class="btn btn-gold">Contact</a></li>
     </ul>
@@ -418,7 +442,7 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
 <div class="mobile-menu" id="mobile-menu">
   <a href="#about"        onclick="closeMobileMenu()">About</a>
   <a href="#experience"   onclick="closeMobileMenu()">Experience</a>
-  <a href="#case-studies" onclick="closeMobileMenu()">Case Studies</a>
+  <a href="#certifications" onclick="closeMobileMenu()">Certifications</a>
   <a href="#projects"     onclick="closeMobileMenu()">Projects</a>
   <a href="#contact"      onclick="closeMobileMenu()" class="btn btn-gold">Contact</a>
 </div>
@@ -544,7 +568,7 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
   </div>
 </section>
 
-<!-- ══ CASE STUDIES ═══════════════════════════════════════════════════════ -->
+<!-- ══ CERTIFICATIONS ═══════════════════════════════════════════════════════ -->
 <section id="certifications" class="section section-alt">
   <div class="container">
     <div class="section-head">
@@ -605,7 +629,6 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
           <div class="cs-desc">Issuing organisation · Year</div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
