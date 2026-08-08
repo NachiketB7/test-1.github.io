@@ -242,15 +242,39 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
     /* ── EXPERIENCE / PAST WORK ──────────────────────────── */
     .timeline { display: flex; flex-direction: column; gap: 0; }
     .timeline-item {
-      display: grid; grid-template-columns: 160px 1fr;
-      gap: 0 2rem; padding: 2rem 0;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 2rem;
+      padding: 2rem 0;
       border-bottom: 1px solid var(--border);
+      align-items: start;
     }
     .timeline-item:last-child { border-bottom: none; }
     .timeline-date { font-size: 13px; color: var(--ink3); font-weight: 500; padding-top: 4px; }
     .timeline-role { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
     .timeline-co   { font-size: 14px; color: var(--gold); font-weight: 500; margin-bottom: .75rem; }
     .timeline-desc { font-size: 15px; color: var(--ink2); line-height: 1.7; text-align: justify; }
+    .timeline-results {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .result-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  .result-icon { font-size: 22px; flex-shrink: 0; }
+  .result-stat {
+      font-family: 'Lora', serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--gold); line-height: 1;
+}
+.result-label { font-size: 12px; color: var(--ink3); margin-top: 2px; }
 
     /* ── Cerfications ────────────────────────────────────── */
     .cs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -370,7 +394,8 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
       .hamburger { display: flex; }
       .about-grid { grid-template-columns: 1fr; }
       .about-img { display: none; }
-      .timeline-item { grid-template-columns: 1fr; gap: .25rem; }
+      .timeline-item { grid-template-columns: 1fr; gap: 1rem; }
+      .timeline-results { flex-direction: row; flex-wrap: wrap; }
       .timeline-date { padding-top: 0; }
       .cs-grid { grid-template-columns: 1fr; }
       .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
