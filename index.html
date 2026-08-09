@@ -440,7 +440,28 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
     body.dark .timeline-desc {
     color: #f5c86e;
     }
-    
+    /* Hero Skills block */
+    .hero-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 1.5rem 4rem 2.5rem 4rem;
+  background: #0f172a;
+}
+.hero-tag {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: #f5c86e;
+}
+@media (max-width: 768px) {
+  .hero-skills { padding: 1.5rem; }
+}
+  
   </style>
 </head>
 <body>
@@ -523,6 +544,14 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
     <div class="stat-label">Product Owner/Product Manager Certifications</div>
   </div>
 </div>
+<!-- ══ HERO SKILLS ════════════════════════════════════════════════════════ -->
+<div class="hero-skills">
+  <span class="hero-tag">Data-Driven Strategic Decision-Making</span>
+  <span class="hero-tag">Product Strategy &amp; Roadmap Ownership</span>
+  <span class="hero-tag">KPI-Driven Prioritization &amp; Trade-off Decisions</span>
+  <span class="hero-tag">Stakeholder Management</span>
+  <span class="hero-tag">Agile Delivery</span>
+</div>
   
 <!-- ══ ABOUT ══════════════════════════════════════════════════════════════ -->
 <section id="about" class="section section-alt">
@@ -538,14 +567,6 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
         <p>
           Outside of work, I'm passionate about learning new things, meeting new people and football. I'm currently based in Munich and open to remote/on-site opportunities in Germany.
         </p>
-        <div class="about-tags">
-          <!-- ← EDIT: Replace with your own skills/keywords -->
-          <span class="tag">Data-Driven Strategic Decision-Making</span>
-          <span class="tag">Product Strategy & Roadmap Ownership</span>
-          <span class="tag">KPI-Driven Prioritization & Trade-off Decisions</span>
-          <span class="tag">Stakeholder management</span>
-          <span class="tag">Agile Delivery </span>
-        </div>
       </div>
     </div>
   </div>
