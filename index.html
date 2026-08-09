@@ -469,7 +469,33 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
 @media (max-width: 768px) {
   .hero-skills { padding: 1.5rem; }
 }
-  
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+.edu-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.edu-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.edu-icon { font-size: 24px; flex-shrink: 0; }
+.edu-degree { font-size: 17px; font-weight: 700; color: var(--ink); }
+.edu-inst { font-size: 14px; color: var(--gold); font-weight: 500; margin-bottom: 4px; }
+.edu-year { font-size: 13px; color: var(--ink3); }
+@media (max-width: 768px) {
+  .edu-grid { grid-template-columns: 1fr; }
+}
+    
   </style>
 </head>
 <body>
@@ -568,7 +594,7 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
   <div class="container">
     <div class="about-grid">
       <div class="about-text">
-        <div class="section-label">About me<</div>
+        <div class="section-label">About me</div>
         <!-- ← EDIT: Replace these paragraphs with your own bio. -->
         <p>
          I'm a Product Owner with 3 years of experience turning complex data into products people actually want to use. I sit at the intersection of business and engineering — translating strategy into clear roadmaps, and working closely with engineers and stakeholders to ship products that are both technically sound and commercially meaningful.
@@ -590,7 +616,7 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
   </div>
 </section>
 
-  <!-- ══ EDUCATION ══════════════════════════════════════════════════════════ -->
+ <!-- ══ EDUCATION ══════════════════════════════════════════════════════════ -->
 <section id="education" class="section">
   <div class="container">
     <div class="section-head">
@@ -599,15 +625,19 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
     <div class="edu-grid">
 
       <div class="edu-card">
-        <div class="edu-icon">🎓</div>
-        <div class="edu-degree">Master of Business Administration and Engineering</div>
+        <div class="edu-header">
+          <span class="edu-icon">🎓</span>
+          <div class="edu-degree">Master of Business Administration and Engineering</div>
+        </div>
         <div class="edu-inst">Hof University of Applied Sciences</div>
         <div class="edu-year">2020 — 2023</div>
       </div>
 
       <div class="edu-card">
-        <div class="edu-icon">🎓</div>
-        <div class="edu-degree">Bachelor of Mechanincal Engineering</div>
+        <div class="edu-header">
+          <span class="edu-icon">🎓</span>
+          <div class="edu-degree">Bachelor of Mechanical Engineering</div>
+        </div>
         <div class="edu-inst">Mumbai University</div>
         <div class="edu-year">2010 — 2015</div>
       </div>
