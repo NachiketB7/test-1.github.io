@@ -247,65 +247,6 @@ body:not(.dark) .hero-sub   { color: #3d3d5c !important; }
       background: var(--gold-l); color: #8a6318;
     }
 
-/*skills and hobbies*/
-.skill-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 1rem;
-}
-.skill-bar-row {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  align-items: center;
-  gap: 12px;
-}
-.skill-bar-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-}
-.skill-bar-track {
-  height: 6px;
-  background: var(--border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.skill-bar-fill {
-  height: 100%;
-  background: var(--gold);
-  border-radius: 3px;
-}
-
-.hobby-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 1rem;
-}
-.hobby-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 8px;
-  text-align: center;
-}
-.hobby-icon {
-  font-size: 26px;
-  display: block;
-  margin-bottom: 6px;
-}
-.hobby-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink);
-}
-@media (max-width: 480px) {
-  .skill-bar-row { grid-template-columns: 110px 1fr; }
-  .hobby-grid { grid-template-columns: 1fr 1fr; }
-}
-
-    
     /* ── EXPERIENCE / PAST WORK ──────────────────────────── */
     .timeline { display: flex; flex-direction: column; gap: 0; }
     .timeline-item {
@@ -683,44 +624,6 @@ body:not(.dark) .hero-outline-btn {
           <span class="tag">Spec driven development</span>
           <span class="tag">Data Analytics</span>
         </div>
-          <!-- ↓↓↓ ADD SKILLS BLOCK HERE ↓↓↓ -->
-        <div class="about-tags-label" style="margin-top:2rem">Skills</div>
-        <div class="skill-bars">
-          <div class="skill-bar-row">
-            <div class="skill-bar-name">Data Analysis</div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
-          </div>
-          <div class="skill-bar-row">
-            <div class="skill-bar-name">Roadmapping</div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
-          </div>
-          <div class="skill-bar-row">
-            <div class="skill-bar-name">Stakeholder Mgmt</div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
-          </div>
-          <div class="skill-bar-row">
-            <div class="skill-bar-name">Agile Delivery</div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
-          </div>
-        </div>
-
-        <!-- ↓↓↓ ADD HOBBIES BLOCK HERE ↓↓↓ -->
-        <div class="about-tags-label" style="margin-top:2rem">Hobbies</div>
-        <div class="hobby-grid">
-          <div class="hobby-card">
-            <span class="hobby-icon">⚽</span>
-            <div class="hobby-name">Football</div>
-          </div>
-          <div class="hobby-card">
-            <span class="hobby-icon">✈️</span>
-            <div class="hobby-name">Travel</div>
-          </div>
-          <div class="hobby-card">
-            <span class="hobby-icon">📚</span>
-            <div class="hobby-name">Learning</div>
-          </div>
-        </div>
-        
       </div>
     </div>
   </div>
@@ -832,7 +735,7 @@ body:not(.dark) .hero-outline-btn {
         <div class="timeline-role">Internship in Data Analytics</div>
         <div class="timeline-co">BMW AG, Munich, Germany</div>
         <div class="timeline-desc">
-          Developed a BI defect-analysis tool to enable faster analysis of quality defect data in purchased parts.
+          Developed a BI defect-analysis tool to enable faster analysis of quality defect data in purchased parts. Used SQL for extraction, aggregation and transformation of quality defect data.
         </div>
   </div>
   <div class="timeline-results">
