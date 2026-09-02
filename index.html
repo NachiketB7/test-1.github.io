@@ -509,6 +509,11 @@ body:not(.dark) .hero-outline-btn {
   border-color: rgba(26,26,46,.25);
 }
     
+/* ── Language toggle ── */
+.lang-de { display: none; }
+body.lang-de .lang-en { display: none; }
+body.lang-de .lang-de { display: inline; }
+   
   </style>
 </head>
 <body>
@@ -528,6 +533,9 @@ body:not(.dark) .hero-outline-btn {
       <li><a href="#projects">Projects</a></li>
       <li><a href="#contact" class="btn btn-gold">Contact</a></li>
     </ul>
+    <button id="lang-btn" onclick="toggleLang()" style="background:none; border:1px solid var(--border); border-radius:6px; padding:4px 8px; cursor:pointer; font-size:16px; margin-left:8px;">
+  🇩🇪
+</button>
     <button class="hamburger" id="hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
@@ -545,6 +553,9 @@ body:not(.dark) .hero-outline-btn {
   <a href="#certifications" onclick="closeMobileMenu()">Certifications</a>
   <a href="#projects"     onclick="closeMobileMenu()">Projects</a>
   <a href="#contact"      onclick="closeMobileMenu()" class="btn btn-gold">Contact</a>
+  <button id="lang-btn-mobile" onclick="toggleLang()" style="background:none; border:1px solid var(--border); border-radius:6px; padding:4px 8px; cursor:pointer; font-size:16px; margin-left:8px;">
+  🇩🇪
+</button>
 </div>
 
 <!-- ══ HERO ═══════════════════════════════════════════════════════════════ -->
